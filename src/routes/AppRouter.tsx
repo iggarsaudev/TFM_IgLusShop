@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout";
+import PrivateLayout from "../layouts/PrivateLayout";
 
 import Home from "../pages/Home/Home";
 import Products from "../pages/Products/Products";
@@ -12,11 +13,21 @@ import Faqs from "../pages/Faqs/Faqs";
 import Legal from "../pages/Legal/Legal";
 import Cookies from "../pages/Cookies/Cokies";
 import NotFound from "../pages/NotFound/NotFound";
+import RequireAuth from "./RequireAuth";
+import Login from "../pages/Login/Login";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        {/* Rutas privadas */}
+        <Route element={<RequireAuth />}>
+          <Route element={<PrivateLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Route>
         {/* Rutas públicas */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />

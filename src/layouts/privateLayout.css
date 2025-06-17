@@ -1,0 +1,24 @@
+.private-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-color: #f8f9fa;
+}
+
+.private-layout__header {
+  background-color: #222;
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.private-layout__title {
+  font-size: 2rem;
+  color: #f4a261;
+  margin: 0;
+}
+
+.private-layout__main {
+  flex: 1;
+  padding: 2rem;
+}
