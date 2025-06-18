@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
+import UserLayout from "../layouts/UserLayout";
 
 import Home from "../pages/Home/Home";
 import Products from "../pages/Products/Products";
@@ -16,21 +17,25 @@ import NotFound from "../pages/NotFound/NotFound";
 import RequireAuth from "./RequireAuth";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import useAuth from "../hooks/useAuth";
 
 export default function AppRouter() {
+  const { isAuthenticated, user } = useAuth();
+
+  const CommonLayout =
+    isAuthenticated && user?.role === "user" ? (
+      <UserLayout />
+    ) : (
+      <PublicLayout />
+    );
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        {/* Rutas privadas */}
-        <Route element={<RequireAuth />}>
-          <Route element={<PrivateLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
-        </Route>
-        {/* Rutas públicas */}
-        <Route element={<PublicLayout />}>
+        {/* Layout público o de usuario logado */}
+        <Route element={CommonLayout}>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/outlet" element={<Outlet />} />
@@ -40,7 +45,15 @@ export default function AppRouter() {
           <Route path="/faqs" element={<Faqs />} />
           <Route path="*" element={<NotFound />} />
         </Route>
-        {/* Rutas externas para mostrar la info legal */}
+
+        {/* Layout admin privado */}
+        <Route element={<RequireAuth allowedRoles={["admin"]} />}>
+          <Route element={<PrivateLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Route>
+
+        {/* Páginas sin layout */}
         <Route path="/legal" element={<Legal />} />
         <Route path="/cookies" element={<Cookies />} />
       </Routes>

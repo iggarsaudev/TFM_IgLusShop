@@ -1,9 +1,9 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import "./publicLayout.css";
+import "./userLayout.css";
 
-export default function PublicLayout() {
+export default function UserLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -55,6 +55,12 @@ export default function PublicLayout() {
               Login
             </NavLink>
           )}
+
+          <NavLink to="/profile" className="header__user-icon">
+            <span className="material-symbols-outlined">
+              sentiment_satisfied
+            </span>
+          </NavLink>
 
           <NavLink to="/cart" className="header__cart-btn">
             <span className="material-symbols-outlined">shopping_cart</span>
