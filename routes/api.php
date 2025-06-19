@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum', IsAdmin::class)->group(function () {
     // Providers
     Route::apiResource('providers', ProviderController::class);
 
-    // Obtener usuario autenticado
-    Route::get('/user', [AuthController::class, 'index']);
+    // // Obtener usuario autenticado
+    // Route::get('/user', [AuthController::class, 'index']);
 
     // Products
     Route::apiResource('products', ProductController::class)->except(['index', 'show']);
@@ -45,6 +45,9 @@ Route::apiResource('outlet', OutletController::class)->only(['index', 'show']); 
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']); // pública
 
 Route::middleware('auth:sanctum')->group(function () {
+    // Obtener usuario autenticado
+    Route::get('/user', [AuthController::class, 'index']);
+
     Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
 });
 
