@@ -8,13 +8,7 @@ interface RequireAuthProps {
 export default function RequireAuth({ allowedRoles }: RequireAuthProps) {
   const { isAuthenticated, user } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  const isAllowed = isAuthenticated && user && allowedRoles.includes(user.role);
 
-  if (!allowedRoles.includes(user!.role)) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
+  return isAllowed ? <Outlet /> : <Navigate to="/login" replace />;
 }

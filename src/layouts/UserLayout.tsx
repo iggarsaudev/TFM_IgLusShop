@@ -57,9 +57,7 @@ export default function UserLayout() {
           )}
 
           <NavLink to="/profile" className="header__user-icon">
-            <span className="material-symbols-outlined">
-              sentiment_satisfied
-            </span>
+            <span className="material-symbols-outlined">account_circle</span>
           </NavLink>
 
           <NavLink to="/cart" className="header__cart-btn">

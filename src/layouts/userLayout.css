@@ -81,6 +81,26 @@ body {
   gap: 1.6rem;
 }
 
+/* Profile */
+.header__user-icon {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+}
+
+.header__user-icon:hover {
+  color: #f4a261;
+}
+
+.header__user-icon:focus {
+  color: #f5994d;
+}
+/* End Profile */
+
+/* Login */
 .header__login-btn {
   background: none;
   border: 1px solid white;
@@ -97,6 +117,13 @@ body {
   color: #222;
   border-color: #f4a261;
 }
+
+.header__login-btn:focus {
+  background-color: #f4a261;
+  color: #222;
+  border-color: #f4a261;
+}
+/* End Login */
 /* End Nav */
 
 /* Cart */
@@ -107,6 +134,14 @@ body {
   font-size: 1rem;
   cursor: pointer;
   color: white;
+}
+
+.header__cart-btn:hover {
+  color: #f4a261;
+}
+
+.header__cart-btn:focus {
+  color: #f5994d;
 }
 
 .cart__count {
