@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import { NavLink } from "react-router-dom";
 import "./login.css";
 
 export default function Login() {
@@ -47,6 +48,9 @@ export default function Login() {
         <button className="login__button" type="submit">
           Log in
         </button>
+        <NavLink to="/register" className="login_nav-link">
+          Register
+        </NavLink>
       </form>
     </div>
   );
