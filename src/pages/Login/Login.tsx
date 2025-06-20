@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { NavLink } from "react-router-dom";
 import "./login.css";
+import { NavLink } from "react-router-dom";
 
 export default function Login() {
   const { login } = useAuth();
@@ -48,9 +48,13 @@ export default function Login() {
         <button className="login__button" type="submit">
           Log in
         </button>
-        <NavLink to="/register" className="login_nav-link">
-          Register
-        </NavLink>
+
+        <p className="login__link">
+          Don't have an account?{" "}
+          <NavLink to="/register" className={"login__link--register"}>
+            Register
+          </NavLink>
+        </p>
       </form>
     </div>
   );
