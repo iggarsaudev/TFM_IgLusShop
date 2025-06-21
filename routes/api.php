@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Obtener usuario autenticado
     Route::get('/user', [AuthController::class, 'index']);
 
+    Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);
+
     Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
 });
 

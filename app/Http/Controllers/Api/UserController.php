@@ -6,6 +6,7 @@ use App\Exceptions\ResourceNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateOwnProfileRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -298,5 +299,20 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Successfully deleted user'
         ], 200);
+    }
+
+    public function updateOwnProfile(UpdateOwnProfileRequest $request)
+    {
+        $user = Auth::user();
+
+        if ($request->has('name')) $user->name = $request->name;
+        if ($request->has('password')) $user->password = Hash::make($request->password);
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'user' => $user,
+        ]);
     }
 }
