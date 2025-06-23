@@ -2,17 +2,14 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
+import toast from "react-hot-toast";
 
-interface Props {
-  onSuccess: (message: string) => void;
-  onError: (message: string) => void;
-}
-
-export default function ProfileForm({ onSuccess, onError }: Props) {
+export default function ProfileForm() {
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasChanges =
     name.trim() !== user?.name ||
@@ -20,11 +17,11 @@ export default function ProfileForm({ onSuccess, onError }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onError("");
-    onSuccess("");
+    setIsSubmitting(true);
 
     if (password && password !== passwordConfirm) {
       onError("Passwords do not match");
+      setIsSubmitting(false);
       return;
     }
 
@@ -43,21 +40,24 @@ export default function ProfileForm({ onSuccess, onError }: Props) {
 
     if (Object.keys(updateData).length === 0) {
       onError("No changes to update.");
+      setIsSubmitting(false);
       return;
     }
 
     try {
       await api.put("/api/user/profile", updateData);
-      onSuccess("Profile updated successfully");
+      toast.success("Profile updated successfully");
       setPassword("");
       setPasswordConfirm("");
     } catch (err: any) {
       if (err.response?.status === 422) {
         const msg = err.response.data?.message || "Validation failed";
-        onError(msg);
+        toast.error(msg);
       } else {
-        onError("Error updating profile");
+        toast.error("Error updating profile");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -85,8 +85,12 @@ export default function ProfileForm({ onSuccess, onError }: Props) {
         onChange={(e) => setPasswordConfirm(e.target.value)}
         placeholder="Confirm new password"
       />
-      <button className="profile__button" type="submit" disabled={!hasChanges}>
-        Save Changes
+      <button
+        className="profile__button"
+        type="submit"
+        disabled={!hasChanges || isSubmitting}
+      >
+        {isSubmitting ? "Saving..." : "Save Changes"}
       </button>
     </form>
   );

@@ -10,14 +10,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsSubmitting(true);
     try {
       await login(email, password);
     } catch {
       setError("Invalid credentials");
+      setIsSubmitting(false);
     }
   };
 
@@ -43,8 +46,8 @@ export default function Login() {
           placeholder="Enter password"
         />
         {error && <p className="login__error">{error}</p>}
-        <button className="login__button" type="submit">
-          Log in
+        <button className="login__button" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in..." : "Log in"}
         </button>
         <p className="login__link">
           Don't have an account?{" "}

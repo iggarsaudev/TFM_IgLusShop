@@ -65,6 +65,11 @@
   background-color: #e76f51;
 }
 
+.login__button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .login__link {
   font-size: 1rem;
   text-align: center;

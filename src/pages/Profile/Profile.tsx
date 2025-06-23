@@ -39,7 +39,7 @@ export default function Profile() {
       {success && <p className="profile__success">{success}</p>}
       {error && <p className="profile__error">{error}</p>}
 
-      <ProfileForm onSuccess={setSuccess} onError={setError} />
+      <ProfileForm />
       <ProfileOrders orders={orders} />
     </section>
   );
