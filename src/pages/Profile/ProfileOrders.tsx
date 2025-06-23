@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import OrderStatusTag from "../../components/ui/OrderStatusTag/OrderStatusTag";
 
 interface Order {
   id: number;
@@ -23,16 +24,17 @@ export default function ProfileOrders({ orders }: Props) {
         <ul className="profile__order-list">
           {orders.map((order) => (
             <li key={order.id} className="profile__order-item">
-              <p>
+              <p className="profile__order-item_description">
                 <strong>ID:</strong> {order.id}
               </p>
-              <p>
+              {/* <p className="profile__order-item_description">
                 <strong>Status:</strong> {order.status}
-              </p>
-              <p>
+              </p> */}
+              <OrderStatusTag status={order.status as any} />
+              <p className="profile__order-item_description">
                 <strong>Total:</strong> {order.total} €
               </p>
-              <p>
+              <p className="profile__order-item_description">
                 <strong>Date:</strong>{" "}
                 {new Date(order.created_at).toLocaleDateString()}
               </p>
