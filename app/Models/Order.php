@@ -19,6 +19,6 @@ class Order extends Model
 
     public function detalles()
     {
-        return $this->hasMany(OrderDetails::class);
+        return $this->hasMany(OrderDetail::class);
     }
 }

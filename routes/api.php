@@ -55,4 +55,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->apiResource('orders', OrderController::class)->except(['update']);
-Route::middleware('auth:sanctum', IsAdmin::class)->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
+// Route::middleware('auth:sanctum', IsAdmin::class)->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
+Route::middleware('auth:sanctum')->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);

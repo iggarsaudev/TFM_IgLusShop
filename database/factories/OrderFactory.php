@@ -19,7 +19,7 @@ class OrderFactory extends Factory
         return [
             'user_id' => rand(1, 10),
             'date' => $this->faker->dateTimeBetween('-30 days', 'now'),
-            'status' => $this->faker->randomElement(['pending', 'sent', 'cancelled', 'delivered']),
+            'status' => $this->faker->randomElement(['pending', 'processing', 'sent', 'cancelled', 'delivered']),
             'total' => 0
         ];
     }

@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory,HasApiTokens;
+    use HasFactory, HasApiTokens;
 
     protected $fillable = [
         'name',
@@ -22,9 +22,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password'
     ];
-    
+
     public function pedidos()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }
