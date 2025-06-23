@@ -99,3 +99,19 @@
   margin: 0.4rem 0;
   font-size: 1rem;
 }
+
+.profile__order-detail-btn {
+  margin-top: 0.8rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  background-color: #f4a261;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile__order-detail-btn:hover {
+  background-color: #e76f51;
+}

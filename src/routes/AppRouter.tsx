@@ -19,6 +19,7 @@ import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import useAuth from "../hooks/useAuth";
 import Profile from "../pages/Profile/Profile";
+import OrderDetail from "../pages/OrderDetail/OrderDetail";
 
 export default function AppRouter() {
   const { isAuthenticated, user } = useAuth();
@@ -51,6 +52,7 @@ export default function AppRouter() {
       <Route element={<RequireAuth allowedRoles={["user"]} />}>
         <Route element={<UserLayout />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
         </Route>
       </Route>
 

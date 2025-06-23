@@ -30,10 +30,11 @@
 }
 
 .login__label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #444;
   display: flex;
   flex-direction: column;
-  font-size: 1.2rem;
-  color: #444;
   gap: 0.4rem;
 }
 

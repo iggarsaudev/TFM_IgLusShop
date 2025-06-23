@@ -1,7 +1,8 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import "./login.css";
 import { NavLink } from "react-router-dom";
+import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
+import "./login.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -34,16 +35,13 @@ export default function Login() {
             required
           />
         </label>
-        <label className="login__label">
-          Password
-          <input
-            className="login__input"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
+        <PasswordInput
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          placeholder="Enter password"
+        />
         {error && <p className="login__error">{error}</p>}
         <button className="login__button" type="submit">
           Log in
