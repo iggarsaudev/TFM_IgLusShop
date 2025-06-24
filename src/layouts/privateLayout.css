@@ -22,3 +22,34 @@
   flex: 1;
   padding: 2rem;
 }
+
+/* Login */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.header__login-btn {
+  background: none;
+  border: 1px solid white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.header__login-btn:hover {
+  background-color: #f4a261;
+  color: #222;
+  border-color: #f4a261;
+}
+
+.header__login-btn:focus {
+  background-color: #f4a261;
+  color: #222;
+  border-color: #f4a261;
+}
+/* End Login */
