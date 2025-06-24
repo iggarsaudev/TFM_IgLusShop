@@ -1,12 +1,19 @@
 import axios from "axios";
 import { useState } from "react";
 import type { UserRegister } from "../../types/authTypes";
+import "./register.css";
 import api from "../../services/api";
+import "../../components/ui/error.css";
+import  Button from "../../components/ui/Button/Button";
+import  Form from "../../components/ui/Form/Form";
+import  Input from "../../components/ui/Input/Input";
+import  ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
+import { useNavigate } from 'react-router-dom';
+
 
 async function register(datos:UserRegister) {
   try {
     const response = await api.post("/api/register", datos);
-    console.log(response.data)
     return response.data.message;
   } catch (error) {
     console.error("Error while creating user:", error);
@@ -15,7 +22,7 @@ async function register(datos:UserRegister) {
 }
 
 export default function Register() {
-
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +40,7 @@ export default function Register() {
       }
       const response = await register(data);
       setMessage(response)
+      navigate('/login');
     } catch (error)  {
         if (axios.isAxiosError(error)) {
           setError(
@@ -47,45 +55,30 @@ export default function Register() {
   };
 
   return (
-    <div className="register">
-      <h1 className="register__title">Register</h1>
-      <form className="register__form" onSubmit={handleSubmit}>
-         <label className="register__label">
-          Name
-          <input
-            className="register__input"
-            type="name"
+      <ContainerForm title="Register">
+      <Form onSubmit={handleSubmit}>
+        <Input label={"Name"}
+            type={"text"}
+            name={"name"}
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
-        <label className="register__label">
-          Email
-          <input
-            className="register__input"
-            type="email"
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            required={true}/>
+        <Input label={"Email"}
+            type={"email"}
+            name={"email"}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label className="register__label">
-          Password
-          <input
-            className="register__input"
-            type="password"
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            required={true}/>
+        <Input label={"Password"}
+            type={"password"}
+            name={"password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <p className="register__error">{error}</p>}
-        {message && <p className="register__message">{message}</p>}
-        <button className="register__button" type="submit">
-          Sign In
-        </button>
-      </form>
-    </div>
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            required={true}/>
+          {error && <p className="error">{error}</p>}
+          {message && <p className="register__message">{message}</p>}
+          <Button text={"Sign In"}/>
+      </Form>
+      </ContainerForm>
   );
 }
