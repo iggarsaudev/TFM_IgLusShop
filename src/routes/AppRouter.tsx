@@ -15,6 +15,7 @@ import Legal from "../pages/Legal/Legal";
 import Cookies from "../pages/Cookies/Cokies";
 import NotFound from "../pages/NotFound/NotFound";
 import RequireAuth from "./RequireAuth";
+import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import useAuth from "../hooks/useAuth";
@@ -38,6 +39,7 @@ export default function AppRouter() {
       >
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/outlet" element={<Outlet />} />

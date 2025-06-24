@@ -1,8 +1,12 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { NavLink } from "react-router-dom";
-import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import "./login.css";
+import "../../components/ui/error.css";
+import { NavLink } from "react-router-dom";
+import Button from "../../components/ui/Button/Button";
+import Form from "../../components/ui/Form/Form";
+import Input from "../../components/ui/Input/Input";
+import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
 
 export default function Login() {
   const { login } = useAuth();
@@ -25,37 +29,37 @@ export default function Login() {
   };
 
   return (
-    <div className="login">
-      <h1 className="login__title">Login</h1>
-      <form className="login__form" onSubmit={handleSubmit}>
-        <label className="login__label">
-          Email
-          <input
-            className="login__input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <PasswordInput
-          label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder="Enter password"
+    <ContainerForm title="Login">
+      <Form onSubmit={handleSubmit}>
+        <Input
+          label={"Email"}
+          type={"email"}
+          name={"email"}
+          value={email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setEmail(e.target.value)
+          }
+          required={true}
         />
-        {error && <p className="login__error">{error}</p>}
-        <button className="login__button" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Log in"}
-        </button>
+        <Input
+          label={"Password"}
+          type={"password"}
+          name={"password"}
+          value={password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(e.target.value)
+          }
+          required={true}
+        />
+        {error && <p className="error">{error}</p>}
+        <Button text={"Log in"} />
         <p className="login__link">
           Don't have an account?{" "}
-          <NavLink to="/register" className={"login__link--register"}>
+          <NavLink to="/register" className={"login__link-register"}>
             Register
           </NavLink>
         </p>
-      </form>
-    </div>
+      </Form>
+    </ContainerForm>
   );
 }
