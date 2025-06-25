@@ -20,6 +20,7 @@ import OrderDetail from "../pages/OrderDetail/OrderDetail";
 
 import RequireAuth from "./RequireAuth";
 import PublicUserLayout from "../layouts/PublicUserLayout";
+import Orders from "../pages/Orders/Orders";
 
 export default function AppRouter() {
   return (
@@ -41,7 +42,8 @@ export default function AppRouter() {
         {/* Páginas accesibles solo para usuarios autenticados con rol "user" */}
         <Route element={<RequireAuth allowedRoles={["user"]} />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/profile/orders" element={<Orders />} />
+          <Route path="/profile/orders/:id" element={<OrderDetail />} />
         </Route>
       </Route>
 

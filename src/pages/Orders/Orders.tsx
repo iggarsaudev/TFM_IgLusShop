@@ -1,4 +1,8 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import api from "../../services/api";
+import Spinner from "../../components/ui/Spinner/Spinner";
 import OrderStatusTag from "../../components/ui/OrderStatusTag/OrderStatusTag";
 
 interface Order {
@@ -8,12 +12,37 @@ interface Order {
   created_at: string;
 }
 
-interface Props {
-  orders: Order[];
-}
-
-export default function ProfileOrders({ orders }: Props) {
+export default function Orders() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const { data } = await api.get<Order[]>("/api/orders");
+        setOrders(data);
+      } catch (err) {
+        setError("Error loading orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchOrders();
+    }
+  }, [user]);
+
+  if (loading) return <Spinner />;
+  if (error) return <p className="profile__error">{error}</p>;
+  if (!user)
+    return (
+      <p className="profile__info">You must be logged in to view orders.</p>
+    );
 
   return (
     <div className="profile__orders">
@@ -27,20 +56,19 @@ export default function ProfileOrders({ orders }: Props) {
               <p className="profile__order-item_description">
                 <strong>ID:</strong> {order.id}
               </p>
-              {/* <p className="profile__order-item_description">
-                <strong>Status:</strong> {order.status}
-              </p> */}
-              <OrderStatusTag status={order.status as any} />
+              <OrderStatusTag status={order.status} />
               <p className="profile__order-item_description">
-                <strong>Total:</strong> {order.total} €
+                <strong>Total:</strong> {(Number(order.total) || 0).toFixed(2)}{" "}
+                €
               </p>
+
               <p className="profile__order-item_description">
                 <strong>Date:</strong>{" "}
                 {new Date(order.created_at).toLocaleDateString()}
               </p>
               <button
                 className="profile__order-detail-btn"
-                onClick={() => navigate(`/orders/${order.id}`)}
+                onClick={() => navigate(`/profile/orders/${order.id}`)}
               >
                 View Details
               </button>
