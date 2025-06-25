@@ -1,11 +1,11 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import "./publicLayout.css";
+import "./publicUserLayout.css";
 
-export default function PublicLayout() {
+export default function PublicUserLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
@@ -53,6 +53,13 @@ export default function PublicLayout() {
           ) : (
             <NavLink to="/login" className="header__login-btn">
               Login
+            </NavLink>
+          )}
+
+          {/* Solo mostramos el icono si el usuario tiene rol "user" */}
+          {user?.role === "user" && (
+            <NavLink to="/profile" className="header__user-icon">
+              <span className="material-symbols-outlined">account_circle</span>
             </NavLink>
           )}
 

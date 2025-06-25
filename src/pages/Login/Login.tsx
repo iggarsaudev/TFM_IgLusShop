@@ -7,6 +7,7 @@ import Button from "../../components/ui/Button/Button";
 import Form from "../../components/ui/Form/Form";
 import Input from "../../components/ui/Input/Input";
 import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
+import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 
 export default function Login() {
   const { login } = useAuth();
@@ -41,18 +42,20 @@ export default function Login() {
           }
           required={true}
         />
-        <Input
+        <PasswordInput
           label={"Password"}
-          type={"password"}
-          name={"password"}
           value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
-          required={true}
+          name={"password"}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter password"
         />
         {error && <p className="error">{error}</p>}
-        <Button text={"Log in"} />
+        <Button
+          text="Log In"
+          submittingText="Logging In..."
+          isSubmitting={isSubmitting}
+          disabled={isSubmitting}
+        />
         <p className="login__link">
           Don't have an account?{" "}
           <NavLink to="/register" className={"login__link-register"}>

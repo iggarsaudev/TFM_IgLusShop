@@ -3,9 +3,13 @@ import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import toast from "react-hot-toast";
+import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
+import Form from "../../components/ui/Form/Form";
+import Input from "../../components/ui/Input/Input";
+import Button from "../../components/ui/Button/Button";
 
 export default function ProfileForm() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -49,6 +53,10 @@ export default function ProfileForm() {
       toast.success("Profile updated successfully");
       setPassword("");
       setPasswordConfirm("");
+      setUser((prev) => ({
+        ...prev!,
+        ...(updateData.name && { name: updateData.name }),
+      }));
     } catch (err: any) {
       if (err.response?.status === 422) {
         const msg = err.response.data?.message || "Validation failed";
@@ -62,36 +70,33 @@ export default function ProfileForm() {
   };
 
   return (
-    <form className="profile__form" onSubmit={handleSubmit}>
-      <label className="profile__label">
-        Name
-        <input
-          className="profile__input"
+    <ContainerForm title="">
+      <Form onSubmit={handleSubmit}>
+        <Input
+          label="Name"
           type="text"
+          name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
+          required={true}
         />
-      </label>
-      <PasswordInput
-        label="New Password (min 8 chars)"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter new password"
-      />
-      <PasswordInput
-        label="Confirm new password"
-        value={passwordConfirm}
-        onChange={(e) => setPasswordConfirm(e.target.value)}
-        placeholder="Confirm new password"
-      />
-      <button
-        className="profile__button"
-        type="submit"
-        disabled={!hasChanges || isSubmitting}
-      >
-        {isSubmitting ? "Saving..." : "Save Changes"}
-      </button>
-    </form>
+        <PasswordInput
+          label="New Password (min 8 chars)"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter new password"
+        />
+        <PasswordInput
+          label="Confirm New Password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          placeholder="Confirm new password"
+        />
+        <Button
+          text={isSubmitting ? "Saving..." : "Save Changes"}
+          disabled={!hasChanges || isSubmitting}
+        />
+      </Form>
+    </ContainerForm>
   );
 }
