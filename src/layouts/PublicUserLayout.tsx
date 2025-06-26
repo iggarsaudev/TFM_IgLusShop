@@ -1,12 +1,16 @@
+// PublicUserLayout.tsx
 import { NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import "./publicLayout.css";
+import { useLocation } from "react-router-dom";
+import "./publicUserLayout.css";
 
-export default function PublicLayout() {
+export default function PublicUserLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const location = useLocation();
+  const isProfileRoute = location.pathname.startsWith("/profile");
 
   return (
     <div className="global">
@@ -56,6 +60,12 @@ export default function PublicLayout() {
             </NavLink>
           )}
 
+          {user?.role === "user" && (
+            <NavLink to="/profile/orders" className="header__user-icon">
+              <span className="material-symbols-outlined">account_circle</span>
+            </NavLink>
+          )}
+
           <NavLink to="/cart" className="header__cart-btn">
             <span className="material-symbols-outlined">shopping_cart</span>
             <span className="cart__count hidden">0</span>
@@ -77,8 +87,33 @@ export default function PublicLayout() {
         </button>
       </header>
 
-      <main className="main">
-        <Outlet />
+      <main className="main-layout">
+        {user?.role === "user" && isProfileRoute && (
+          <>
+            <button
+              className="main-layout__toggle"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              ☰
+            </button>
+
+            <aside
+              className={`main-layout__sidebar ${
+                menuOpen ? "main-layout__sidebar--open" : ""
+              }`}
+            >
+              <NavLink to="/profile/orders">My Orders</NavLink>
+              {/* end se pone para que el active solo actúe en profile cuando esté en profile  */}
+              <NavLink to="/profile" end>
+                My Profile
+              </NavLink>
+            </aside>
+          </>
+        )}
+
+        <section className="main-layout__content">
+          <Outlet />
+        </section>
       </main>
 
       <footer className="footer">
@@ -88,8 +123,8 @@ export default function PublicLayout() {
         <div className="footer__links">
           <NavLink to="/legal" className="footer__link" target="_blank">
             Legal Notice
-          </NavLink>
-          |
+          </NavLink>{" "}
+          |{" "}
           <NavLink to="/cookies" className="footer__link" target="_blank">
             Cookies Policy
           </NavLink>

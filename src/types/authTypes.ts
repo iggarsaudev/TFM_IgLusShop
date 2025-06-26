@@ -3,14 +3,17 @@ export interface User {
   name: string;
   email: string;
   role: "admin" | "user";
+  avatar?: string;
 }
 
-export interface AuthContextType {
+export type AuthContextType = {
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
+  logout: () => void;
+  refreshUser: (token?: string) => Promise<User | null>;
+};
 
 export interface UserRegister {
   name: string;

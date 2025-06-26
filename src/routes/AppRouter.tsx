@@ -1,7 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import PublicLayout from "../layouts/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
-import UserLayout from "../layouts/UserLayout";
 
 import Home from "../pages/Home/Home";
 import Products from "../pages/Products/Products";
@@ -14,28 +12,21 @@ import Faqs from "../pages/Faqs/Faqs";
 import Legal from "../pages/Legal/Legal";
 import Cookies from "../pages/Cookies/Cokies";
 import NotFound from "../pages/NotFound/NotFound";
-import RequireAuth from "./RequireAuth";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
-import useAuth from "../hooks/useAuth";
+import OrderDetail from "../pages/OrderDetail/OrderDetail";
+
+import RequireAuth from "./RequireAuth";
+import PublicUserLayout from "../layouts/PublicUserLayout";
+import Orders from "../pages/Orders/Orders";
 import Profile from "../pages/Profile/Profile";
 
 export default function AppRouter() {
-  const { isAuthenticated, user } = useAuth();
-
   return (
     <Routes>
-      {/* Layout público o de usuario logado */}
-      <Route
-        element={
-          isAuthenticated && user?.role === "user" ? (
-            <UserLayout />
-          ) : (
-            <PublicLayout />
-          )
-        }
-      >
+      {/* Rutas públicas o de usuario logado con layout combinado */}
+      <Route element={<PublicUserLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -47,23 +38,23 @@ export default function AppRouter() {
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/faqs" element={<Faqs />} />
         <Route path="*" element={<NotFound />} />
-      </Route>
 
-      {/* Layout de usuario logado */}
-      <Route element={<RequireAuth allowedRoles={["user"]} />}>
-        <Route element={<UserLayout />}>
+        {/* Páginas accesibles solo para usuarios autenticados con rol "user" */}
+        <Route element={<RequireAuth allowedRoles={["user"]} />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/orders" element={<Orders />} />
+          <Route path="/profile/orders/:id" element={<OrderDetail />} />
         </Route>
       </Route>
 
-      {/* Layout admin privado */}
+      {/* Layout privado para admins */}
       <Route element={<RequireAuth allowedRoles={["admin"]} />}>
         <Route element={<PrivateLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Route>
 
-      {/* Páginas sin layout */}
+      {/* Páginas legales sin layout */}
       <Route path="/legal" element={<Legal />} />
       <Route path="/cookies" element={<Cookies />} />
     </Routes>

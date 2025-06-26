@@ -1,0 +1,58 @@
+.profile__orders {
+  margin: 2rem;
+}
+
+.profile__subtitle {
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
+  color: #222;
+}
+
+.profile__info {
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.profile__order-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  list-style: none;
+  padding: 0;
+}
+
+.profile__order-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 1.2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1rem 0.4rem rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  height: 100%;
+}
+
+.profile__order-item_description {
+  margin: 0.4rem 0;
+  font-size: 1rem;
+}
+
+.profile__order-detail-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #f4a261;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile__order-detail-btn:hover {
+  background-color: #e58b43;
+}

@@ -1,3 +1,4 @@
+/* Reset y globales */
 * {
   padding: 0;
   margin: 0;
@@ -7,7 +8,6 @@ body {
   background-color: #f8f9fa;
 }
 
-/* Global para controlar el footer */
 .global {
   display: flex;
   flex-direction: column;
@@ -17,7 +17,6 @@ body {
 .main {
   flex: 1;
 }
-/* End Global para controlar el footer */
 
 /* Header */
 .header {
@@ -32,7 +31,6 @@ body {
   width: 100%;
   z-index: 1000;
 }
-/* End Header */
 
 /* Logo */
 .header__logo {
@@ -43,101 +41,8 @@ body {
 .header__logo--highlight {
   color: #f4a261;
 }
-/* End Logo */
 
-/* Nav */
-.header__nav {
-  display: flex;
-}
-
-.header__nav-list {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-}
-
-.header__nav-link {
-  color: white;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s;
-}
-
-.header__nav-link.active {
-  color: #f4a261;
-}
-
-.header__nav-link:hover {
-  color: #f4a261;
-}
-
-.header__nav-link:focus {
-  color: #f5994d;
-}
-
-.header__actions {
-  display: flex;
-  align-items: center;
-  gap: 1.6rem;
-}
-
-.header__login-btn {
-  background: none;
-  border: 1px solid white;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.4rem;
-  color: white;
-  font-size: 1rem;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.header__login-btn:hover {
-  background-color: #f4a261;
-  color: #222;
-  border-color: #f4a261;
-}
-
-.header__login-btn:focus {
-  background-color: #f4a261;
-  color: #222;
-  border-color: #f4a261;
-}
-/* End Nav */
-
-/* Cart */
-.header__cart-btn {
-  position: relative;
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: white;
-}
-
-.cart__count {
-  position: absolute;
-  top: 0.3rem;
-  right: -1rem;
-  background-color: red;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: bold;
-  width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.cart__count.hidden {
-  display: none; /* Oculta el contador cuando no hay productos en el carrito */
-}
-/* End Cart */
-
-/* Toogler */
+/* Toggler (hamburguesa) */
 .header__toggler {
   display: none;
   font-size: 1rem;
@@ -158,17 +63,169 @@ body {
 }
 
 .header__toggler-icon--close {
-  opacity: 0; /* Icono de "close" oculto por defecto */
+  opacity: 0;
 }
 
 .header__toggler--active .header__toggler-icon--menu {
-  opacity: 0; /* Mostrar "close" cuando el menú está abierto, icono "menu" no aparece */
+  opacity: 0;
 }
 
 .header__toggler--active .header__toggler-icon--close {
-  opacity: 1; /* Mostrar "menu" cuando el menú está cerrado, icono "close" no aparece */
+  opacity: 1;
 }
-/* End Toogler */
+
+/* Nav */
+.header__nav {
+  display: flex;
+}
+
+.header__nav-list {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.header__nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.header__nav-link:hover,
+.header__nav-link:focus {
+  color: #f4a261;
+}
+
+.header__nav-link.active {
+  color: #f4a261;
+}
+
+/* Carrito, usuario, login */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.header__user-icon {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+}
+
+.header__user-icon:hover,
+.header__user-icon:focus {
+  color: #f4a261;
+}
+
+.header__login-btn {
+  background: none;
+  border: 1px solid white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.header__login-btn:hover,
+.header__login-btn:focus {
+  background-color: #f4a261;
+  color: #222;
+  border-color: #f4a261;
+}
+
+.header__cart-btn {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+}
+
+.header__cart-btn:hover {
+  color: #f4a261;
+}
+
+.header__cart-btn:focus {
+  color: #f5994d;
+}
+
+.cart__count {
+  position: absolute;
+  top: 0.3rem;
+  right: -1rem;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.cart__count.hidden {
+  display: none;
+}
+
+/* Layout profile */
+.main-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.main-layout__sidebar {
+  width: 20rem;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-right: 0.1rem solid #ccc;
+}
+
+.main-layout__content {
+  flex: 1;
+}
+
+.main-layout__toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #f4a261;
+  cursor: pointer;
+  margin: 1rem;
+}
+
+.main-layout__sidebar {
+  width: 16rem;
+  background-color: #333;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.main-layout__sidebar a {
+  color: white;
+  text-decoration: none;
+}
+
+.main-layout__sidebar a:hover,
+.main-layout__sidebar a.active {
+  color: #f4a261;
+}
 
 /* Footer */
 .footer {
@@ -201,11 +258,9 @@ body {
 .footer__info {
   margin: 0;
 }
-/* End Footer */
 
 /* Responsive */
 @media (max-width: 768px) {
-  /* Nav */
   .header__nav {
     display: none;
     position: absolute;
@@ -225,12 +280,26 @@ body {
   .header__nav--active {
     display: block;
   }
-  /* End Nav */
 
-  /* Toggler */
   .header__toggler {
     display: block;
   }
-  /* End Toggler */
+
+  .main-layout__sidebar {
+    position: fixed;
+    top: 4rem; /* o el alto de tu header */
+    left: 0;
+    height: calc(100vh - 4rem);
+    transform: translateX(-100%);
+    width: 14rem;
+    z-index: 1000;
+  }
+
+  .main-layout__sidebar--open {
+    transform: translateX(0);
+  }
+
+  .main-layout__toggle {
+    display: block;
+  }
 }
-/* End Responsive */

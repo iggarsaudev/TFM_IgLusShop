@@ -9,10 +9,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
   const navigate = useNavigate();
 
-  const fetchUser = async (token?: string): Promise<User | null> => {
+  const refreshUser = async (token?: string): Promise<User | null> => {
     try {
       const authHeader = token || localStorage.getItem("token");
-      //   console.log("Token usado en fetchUser:", authHeader);
       const { data } = await api.get("/api/user", {
         headers: { Authorization: `Bearer ${authHeader}` },
       });
@@ -26,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) fetchUser(storedToken);
+    if (storedToken) refreshUser(storedToken);
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -34,9 +33,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.post("/api/login", { email, password });
       const token = response.data.token;
       localStorage.setItem("token", token);
-      const user = await fetchUser(token);
+      const user = await refreshUser(token);
       if (user?.role === "admin") navigate("/dashboard");
-      else if (user?.role === "user") navigate("/profile");
+      else if (user?.role === "user") navigate("/profile/orders");
     } catch {
       throw new Error("Login failed");
     }
@@ -52,7 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isAuthenticated, login, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
