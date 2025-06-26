@@ -6,7 +6,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>Panel de Administración, {user?.name}</h1>
+      <h1>Administration Panel, {user?.name}</h1>
     </>
   );
 }

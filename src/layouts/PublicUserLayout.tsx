@@ -61,7 +61,7 @@ export default function PublicUserLayout() {
           )}
 
           {user?.role === "user" && (
-            <NavLink to="/profile" className="header__user-icon">
+            <NavLink to="/profile/orders" className="header__user-icon">
               <span className="material-symbols-outlined">account_circle</span>
             </NavLink>
           )}

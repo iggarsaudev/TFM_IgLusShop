@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: "admin" | "user";
+  avatar?: string;
 }
 
 export type AuthContextType = {
@@ -11,6 +12,7 @@ export type AuthContextType = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: (token?: string) => Promise<User | null>;
 };
 
 export interface UserRegister {

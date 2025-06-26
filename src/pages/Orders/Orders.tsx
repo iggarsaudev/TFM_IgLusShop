@@ -4,10 +4,11 @@ import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import Spinner from "../../components/ui/Spinner/Spinner";
 import OrderStatusTag from "../../components/ui/OrderStatusTag/OrderStatusTag";
+import "./orders.css";
 
 interface Order {
   id: number;
-  status: string;
+  status: "pending" | "processing" | "sent" | "delivered" | "cancelled";
   total: number;
   created_at: string;
 }
@@ -46,7 +47,7 @@ export default function Orders() {
 
   return (
     <div className="profile__orders">
-      <h2 className="profile__subtitle">My Orders</h2>
+      <h1 className="profile__subtitle">My Orders</h1>
       {orders.length === 0 ? (
         <p className="profile__info">No orders found.</p>
       ) : (
@@ -58,8 +59,7 @@ export default function Orders() {
               </p>
               <OrderStatusTag status={order.status} />
               <p className="profile__order-item_description">
-                <strong>Total:</strong> {(Number(order.total) || 0).toFixed(2)}{" "}
-                €
+                <strong>Total:</strong> ${(Number(order.total) || 0).toFixed(2)}{" "}
               </p>
 
               <p className="profile__order-item_description">

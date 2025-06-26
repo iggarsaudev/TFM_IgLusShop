@@ -15,12 +15,12 @@ import NotFound from "../pages/NotFound/NotFound";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
-import Profile from "../pages/Profile/Profile";
 import OrderDetail from "../pages/OrderDetail/OrderDetail";
 
 import RequireAuth from "./RequireAuth";
 import PublicUserLayout from "../layouts/PublicUserLayout";
 import Orders from "../pages/Orders/Orders";
+import Profile from "../pages/Profile/Profile";
 
 export default function AppRouter() {
   return (
