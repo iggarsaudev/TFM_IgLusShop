@@ -50,10 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);
 
+    Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
+
     Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
 });
 
-
 Route::middleware('auth:sanctum')->apiResource('orders', OrderController::class)->except(['update']);
-// Route::middleware('auth:sanctum', IsAdmin::class)->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
 Route::middleware('auth:sanctum')->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);

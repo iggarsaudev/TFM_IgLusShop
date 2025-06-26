@@ -16,6 +16,7 @@ class UpdateOwnProfileRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'password' => 'sometimes|string|min:8|confirmed',
+            'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 
