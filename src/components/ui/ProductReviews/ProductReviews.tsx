@@ -1,18 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ProductReviewList from "./ProductReviewList";
 import ProductReviewForm from "./ProductReviewForm";
 import api from "../../../services/api";
 import Spinner from "../Spinner/Spinner";
-
-interface Review {
-  id: number;
-  comment: string;
-  rating: number;
-  created_at: string;
-  user: {
-    name: string;
-  };
-}
+import type { Review } from "../../../types/review";
 
 interface Props {
   productId: number;
@@ -23,7 +14,7 @@ export default function ProductReviews({ productId }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -34,11 +25,11 @@ export default function ProductReviews({ productId }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
 
   useEffect(() => {
     fetchReviews();
-  }, [productId]);
+  }, [fetchReviews]);
 
   if (loading) {
     return (
@@ -51,7 +42,11 @@ export default function ProductReviews({ productId }: Props) {
   return (
     <section className="product-reviews">
       {error && <p className="product-reviews__error">{error}</p>}
-      {!error && <ProductReviewList reviews={reviews} />}
+      <ProductReviewList
+        reviews={reviews}
+        onDelete={(id) => setReviews((prev) => prev.filter((r) => r.id !== id))}
+        onUpdate={fetchReviews}
+      />
       <ProductReviewForm
         productId={productId}
         onReviewSubmitted={fetchReviews}

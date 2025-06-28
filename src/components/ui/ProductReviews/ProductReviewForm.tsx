@@ -2,6 +2,7 @@ import { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import api from "../../../services/api";
 import toast from "react-hot-toast";
+import Button from "../Button/Button";
 import "./productReviewForm.css";
 
 interface Props {
@@ -75,19 +76,18 @@ export default function ProductReviewForm({
 
       <textarea
         className="review-form__textarea"
-        placeholder="Escribe tu reseña..."
+        placeholder="Write your review..."
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         required
       ></textarea>
 
-      <button
-        className="review-form__submit"
-        type="submit"
+      <Button
+        text="Submit review"
+        submittingText="Sending..."
+        isSubmitting={isSubmitting}
         disabled={isSubmitting}
-      >
-        {isSubmitting ? "Sending..." : "Submit review"}
-      </button>
+      />
     </form>
   );
 }
