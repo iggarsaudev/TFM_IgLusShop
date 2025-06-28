@@ -93,12 +93,12 @@ class ReviewController extends Controller
      */
     public function store(ReviewRequest $request)
     {
-        $user_id=Auth::id();
+        $user_id = Auth::id();
         $review = Review::create([
             'user_id' => $user_id,
             'product_id' => $request->product_id,
-            'comment'=> $request->comment,
-            'rating'=> $request->rating
+            'comment' => $request->comment,
+            'rating' => $request->rating
         ]);
 
         return response()->json([
@@ -226,15 +226,15 @@ class ReviewController extends Controller
         $review = Review::find($id);
         if (!$review) {
             throw new ResourceNotFoundException();
-            }
-            $user_id=Auth::id();
+        }
+        $user_id = Auth::id();
 
-        if ($user_id!==$review->user_id) {
+        if ($user_id !== $review->user_id) {
             return response()->json([
                 'message' => 'Unauthorized.'
             ], 403);
         }
-      
+
         $review->update($request->all());
 
         return response()->json([
@@ -290,13 +290,13 @@ class ReviewController extends Controller
     public function destroy(string $id)
     {
         $review = Review::find($id);
-        $user_id=Auth::id();
+        $user_id = Auth::id();
 
         if (!$review) {
             throw new ResourceNotFoundException();
         }
-        
-        if ($user_id!==$review->user_id) {
+
+        if ($user_id !== $review->user_id) {
             return response()->json([
                 'message' => 'Unauthorized.'
             ], 403);
@@ -306,5 +306,15 @@ class ReviewController extends Controller
         return response()->json([
             'message' => 'Review deleted.'
         ], 200);
+    }
+
+    public function getByProductId($productId)
+    {
+        $reviews = Review::with('user')
+            ->where('product_id', $productId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($reviews, 200);
     }
 }
