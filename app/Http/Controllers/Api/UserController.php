@@ -6,9 +6,12 @@ use App\Exceptions\ResourceNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateOwnProfileRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -298,5 +301,40 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Successfully deleted user'
         ], 200);
+    }
+
+    public function updateOwnProfile(UpdateOwnProfileRequest $request)
+    {
+        $user = Auth::user();
+
+        if ($request->has('name')) $user->name = $request->name;
+        if ($request->has('password')) $user->password = Hash::make($request->password);
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'user' => $user,
+        ]);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $user = Auth::user();
+
+        // Borra el anterior si existe
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = $path;
+        $user->save();
+
+        return response()->json(['avatar' => $path]);
     }
 }

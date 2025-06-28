@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\OrderDetails;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +104,7 @@ class OrderController extends Controller
                 $subtotal = $product->price * $item['quantity'];
 
                 // Guardamos los detalles                
-                OrderDetails::create([
+                OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => $item['quantity'],
@@ -168,7 +168,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with('detalles')->find($id);
+        $order = Order::with('detalles.product')->find($id);
 
         if (!$order) {
             throw new ResourceNotFoundException();
@@ -240,6 +240,13 @@ class OrderController extends Controller
 
         if (!$order) {
             throw new ResourceNotFoundException();
+        }
+
+        $user = $request->user();
+
+        // Permitir solo si es admin o es propietario del pedido
+        if (!$user->isAdmin() && $user->id !== $order->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
         }
 
         $order->update(['status' => $request->status]);
