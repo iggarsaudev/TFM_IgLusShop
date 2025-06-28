@@ -1,5 +1,5 @@
-import ProductReviewList from "../../components/ui/ProductReviews/ProductReviewList";
+import ProductReviews from "../../components/ui/ProductReviews/ProductReviews";
 
 export default function Reviews() {
-  return <ProductReviewList productId={1} />;
+  return <ProductReviews productId={1} />;
 }

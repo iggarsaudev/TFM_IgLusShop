@@ -1,7 +1,7 @@
 .reviews {
   margin: 2rem auto;
-  padding: 0 2rem; /* Añade margen lateral */
-  max-width: 1200px; /* Limita el ancho en pantallas grandes */
+  padding: 0 2rem;
+  max-width: 75rem;
 }
 
 .reviews__title {
@@ -14,6 +14,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 1.5rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .reviews__card {
@@ -25,16 +29,13 @@
   transition: transform 0.2s ease;
 }
 
-.reviews__card:hover {
-  transform: translateY(-0.2rem);
-}
-
 .reviews__author {
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 .reviews__stars {
+  font-size: 1.6rem;
   color: #f4a261;
   margin-bottom: 0.5rem;
 }
