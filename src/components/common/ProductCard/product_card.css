@@ -1,0 +1,27 @@
+.product-price-before {
+    color: rgb(151, 151, 151);
+    text-decoration: line-through;
+    font-size: small;
+}
+
+.button-card{
+  background-color: #f4a261;
+  padding: 0.25rem 0.5rem;
+  color:white;
+  border-radius: 0.25rem; 
+  text-decoration: none;
+}
+
+.button-card:hover{
+  background-color: #e76f51;
+}
+
+.button-card:focus{
+  background-color: #e76f51;
+
+}
+
+.button-card:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
