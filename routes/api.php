@@ -42,6 +42,9 @@ Route::middleware('auth:sanctum', 'check.token.expiration')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    // Renew token
+    Route::post('/renew-token', [AuthController::class, 'renewToken']);
+
     // Perfil de usuario autenticado
     Route::get('/user', [AuthController::class, 'index']);
     Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);

@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -117,25 +118,6 @@ class AuthController extends Controller
      *     )
      * )
      */
-    // public function login(Request $request)
-    // {
-    //     $user = User::where('email', $request->email)->first();
-
-    //     if (! $user || ! Hash::check($request->password, $user->password)) {
-    //         return response()->json(['message' => 'Invalid credentials'], 401);
-    //     }
-
-    //     if ($user->role !== 'admin') {
-    //         $token = $user->createToken('api-token')->plainTextToken;
-    //     } else {
-    //         $token = $user->createToken('admin-token')->plainTextToken;
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'Successful login',
-    //         'token' => $token
-    //     ], 200);
-    // }
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -146,19 +128,38 @@ class AuthController extends Controller
 
         $tokenName = $user->role === 'admin' ? 'admin-token' : 'api-token';
 
-        // Creamos el token y accedemos al modelo
         $tokenResult = $user->createToken($tokenName);
-        $tokenModel = $tokenResult->accessToken;
+        $token = $user->tokens()->latest()->first();
 
-        // Establecemos la expiración del token (60 minutos)
-        $tokenModel->expires_at = Carbon::now()->addMinutes(60);
-        $tokenModel->save();
+        $token->expires_at = Carbon::now()->addMinutes(5);
+        $token->save();
 
         return response()->json([
             'message' => 'Successful login',
             'token' => $tokenResult->plainTextToken,
-            'expires_at' => $tokenModel->expires_at,
+            'expires_at' => $token->expires_at,
         ], 200);
+    }
+
+    public function renewToken(Request $request)
+    {
+        $user = $request->user();
+
+        // Eliminamos el token actual
+        $request->user()->currentAccessToken()->delete();
+
+        // Creamos uno nuevo
+        $tokenName = $user->role === 'admin' ? 'admin-token' : 'api-token';
+        $tokenResult = $user->createToken($tokenName);
+        $token = $user->tokens()->latest()->first();
+
+        $token->expires_at = Carbon::now()->addMinutes(60);
+        $token->save();
+
+        return response()->json([
+            'token' => $tokenResult->plainTextToken,
+            'expires_at' => $token->expires_at,
+        ]);
     }
 
     /**
