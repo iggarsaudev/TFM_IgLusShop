@@ -10,6 +10,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
   const navigate = useNavigate();
   const [tokenExpiresAt, setTokenExpiresAt] = useState<Date | null>(null);
+  const [canRenew, setCanRenew] = useState(false);
 
   const refreshUser = async (token?: string): Promise<User | null> => {
     try {
@@ -38,20 +39,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!tokenExpiresAt) return;
+    if (!tokenExpiresAt) {
+      setCanRenew(false);
+      return;
+    }
 
     const interval = setInterval(() => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const diff = tokenExpiresAt.getTime() - now;
       const minutesLeft = Math.floor(diff / 60000);
 
+      setCanRenew(diff > 0 && diff <= 5 * 60 * 1000);
+
       if (minutesLeft > 0 && minutesLeft <= 5) {
-        toast(`⚠️ Your session expires in ${minutesLeft} minutes`);
-        clearInterval(interval);
+        toast(
+          `⚠️ Your session expires in ${minutesLeft} minutes. Go to your profile and renew it.`
+        );
       }
 
-      if (diff <= 0) clearInterval(interval); // ya ha expirado
-    }, 60000); // revisa cada minuto
+      if (diff <= 0) {
+        clearInterval(interval);
+        setCanRenew(false);
+      }
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [tokenExpiresAt]);
@@ -90,7 +100,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, isAuthenticated, login, logout, refreshUser }}
+      value={{
+        user,
+        setUser,
+        isAuthenticated,
+        login,
+        logout,
+        refreshUser,
+        canRenew,
+        setCanRenew,
+      }}
     >
       {children}
     </AuthContext.Provider>
