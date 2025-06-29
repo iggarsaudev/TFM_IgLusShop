@@ -5,7 +5,7 @@ import Home from "../pages/Home/Home";
 import Products from "../pages/Products/Products";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Outlet from "../pages/Outlet/Outlet";
-import Cart from "../pages/Cart/Cart";
+import { Cart } from "../pages/Cart/Cart";
 import Contact from "../pages/Contact/Contact";
 import Reviews from "../pages/Reviews/Reviews";
 import Faqs from "../pages/Faqs/Faqs";
@@ -33,7 +33,6 @@ export default function AppRouter() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/outlet" element={<Outlet />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/faqs" element={<Faqs />} />
@@ -41,6 +40,7 @@ export default function AppRouter() {
 
         {/* Páginas accesibles solo para usuarios autenticados con rol "user" */}
         <Route element={<RequireAuth allowedRoles={["user"]} />}>
+          <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/orders" element={<Orders />} />
           <Route path="/profile/orders/:id" element={<OrderDetail />} />

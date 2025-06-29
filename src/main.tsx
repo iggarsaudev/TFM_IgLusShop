@@ -5,11 +5,13 @@ import AppRouter from "./routes/AppRouter";
 import { AuthProvider } from "./context/AuthProvider";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { TanstackQueryProvider } from "../src/components/provider"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
+        <TanstackQueryProvider>
         <Toaster
           position="top-right"
           reverseOrder={false}
@@ -38,6 +40,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           }}
         />
         <AppRouter />
+        </TanstackQueryProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -10,3 +10,7 @@ export interface ProductType {
     provider_id: number,
     category_id: number
 }
+
+export type CartItem = ProductType & {
+  quantity: number;
+};

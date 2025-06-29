@@ -1,0 +1,14 @@
+.cart-link{
+    text-decoration: none;
+    padding: 0.5rem;
+    color:#e76f51;
+    border-radius:0.5rem;
+}
+
+.cart-link:hover{
+    color: #ff4d20;
+}
+
+.cart-focus{
+    border:1px solid rgb(0, 0, 0);
+}       

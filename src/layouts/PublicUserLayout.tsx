@@ -68,7 +68,7 @@ export default function PublicUserLayout() {
 
           <NavLink to="/cart" className="header__cart-btn">
             <span className="material-symbols-outlined">shopping_cart</span>
-            <span className="cart__count hidden">0</span>
+            <span className="cart__count">0</span>
           </NavLink>
         </div>
 
