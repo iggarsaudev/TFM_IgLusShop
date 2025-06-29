@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OutletController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\CategoryController;
 
 // Registro público
 Route::post('/register', [AuthController::class, 'register']);
@@ -39,6 +40,8 @@ Route::middleware('auth:sanctum', IsAdmin::class)->group(function () {
 });
 
 Route::apiResource('products', ProductController::class)->only(['index', 'show']); // pública
+
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']); // pública
 
 Route::apiResource('outlet', OutletController::class)->only(['index', 'show']); // pública
 

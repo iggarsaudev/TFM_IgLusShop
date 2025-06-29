@@ -21,11 +21,24 @@ class ProductFactory extends Factory
             'description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 5, 200),
             'stock' => $this->faker->numberBetween(0, 100),
-            'image' => $this->faker->imageUrl(640, 480, 'technics', true),
+            'image' => $this->getDummyImage(),
             'has_discount' =>$hasDiscount = fake()->boolean(),
             'discount' => $hasDiscount ? fake()->randomFloat(2, 5, 90) : 0,
             'category_id' => rand(1, 5),
             'provider_id' => rand(1, 5), 
         ];
+    }
+    private function getDummyImage(): string
+    {
+        $response = \Illuminate\Support\Facades\Http::get('https://dummyjson.com/products');
+
+        if ($response->successful()) {
+            $products = $response->json()['products'];
+            $random = $products[array_rand($products)];
+            return $random['images'][0] ?? 'https://via.placeholder.com/300';
+        }
+
+        // Fallback si falla la petición
+        return 'https://via.placeholder.com/300';
     }
 }
