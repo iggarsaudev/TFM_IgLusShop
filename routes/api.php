@@ -38,7 +38,7 @@ Route::get('/product/{productId}/reviews', [ReviewController::class, 'getByProdu
 | Rutas protegidas (requieren autenticación con Sanctum)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum', 'check.token.expiration')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -59,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 | Rutas para administradores (requieren auth + rol admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
+Route::middleware(['auth:sanctum', 'check.token.expiration', IsAdmin::class])->group(function () {
     // Gestión de usuarios
     Route::apiResource('users', UserController::class);
 

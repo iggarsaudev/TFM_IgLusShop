@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -116,6 +117,25 @@ class AuthController extends Controller
      *     )
      * )
      */
+    // public function login(Request $request)
+    // {
+    //     $user = User::where('email', $request->email)->first();
+
+    //     if (! $user || ! Hash::check($request->password, $user->password)) {
+    //         return response()->json(['message' => 'Invalid credentials'], 401);
+    //     }
+
+    //     if ($user->role !== 'admin') {
+    //         $token = $user->createToken('api-token')->plainTextToken;
+    //     } else {
+    //         $token = $user->createToken('admin-token')->plainTextToken;
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Successful login',
+    //         'token' => $token
+    //     ], 200);
+    // }
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -124,15 +144,20 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        if ($user->role !== 'admin') {
-            $token = $user->createToken('api-token')->plainTextToken;
-        } else {
-            $token = $user->createToken('admin-token')->plainTextToken;
-        }
+        $tokenName = $user->role === 'admin' ? 'admin-token' : 'api-token';
+
+        // Creamos el token y accedemos al modelo
+        $tokenResult = $user->createToken($tokenName);
+        $tokenModel = $tokenResult->accessToken;
+
+        // Establecemos la expiración del token (60 minutos)
+        $tokenModel->expires_at = Carbon::now()->addMinutes(60);
+        $tokenModel->save();
 
         return response()->json([
             'message' => 'Successful login',
-            'token' => $token
+            'token' => $tokenResult->plainTextToken,
+            'expires_at' => $tokenModel->expires_at,
         ], 200);
     }
 
