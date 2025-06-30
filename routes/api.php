@@ -11,14 +11,9 @@ use App\Http\Controllers\Api\ProviderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OutletController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\CategoryController;
 
-/*
-|--------------------------------------------------------------------------
-| Rutas públicas (no requieren autenticación)
-|--------------------------------------------------------------------------
-*/
-
-// Registro y login
+// Registro público
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -74,7 +69,26 @@ Route::middleware(['auth:sanctum', 'check.token.expiration', IsAdmin::class])->g
 
     // Gestión de outlet (excepto index/show/update públicos o deshabilitados)
     Route::apiResource('outlet', OutletController::class)->except(['index', 'show', 'update']);
-
-    // Actualizar estado de pedido (solo admin)
-    Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
+
+Route::apiResource('products', ProductController::class)->only(['index', 'show']); // pública
+
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']); // pública
+
+Route::apiResource('outlet', OutletController::class)->only(['index', 'show']); // pública
+
+Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']); // pública
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Obtener usuario autenticado
+    Route::get('/user', [AuthController::class, 'index']);
+
+    Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);
+
+    Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
+
+    Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
+});
+
+Route::middleware('auth:sanctum')->apiResource('orders', OrderController::class)->except(['update']);
+Route::middleware('auth:sanctum')->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
