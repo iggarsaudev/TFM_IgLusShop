@@ -8,6 +8,7 @@ import Form from "../../components/ui/Form/Form";
 import Input from "../../components/ui/Input/Input";
 import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const { login } = useAuth();
@@ -24,7 +25,7 @@ export default function Login() {
     try {
       await login(email, password);
     } catch {
-      setError("Invalid credentials");
+      toast.error("Invalid credentials");
       setIsSubmitting(false);
     }
   };

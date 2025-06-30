@@ -12,15 +12,38 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Toaster
           position="top-right"
           reverseOrder={false}
+          // toastOptions={{
+          //   duration: 3000,
+          //   style: {
+          //     background: "#f4a261",
+          //     color: "#fff",
+          //     borderRadius: "0.5rem",
+          //     fontSize: "1rem",
+          //     fontWeight: "bold",
+          //     padding: "1rem 1.5rem",
+          //   },
+          //   success: {
+          //     icon: "✅",
+          //     style: {
+          //       borderColor: "#2a9d8f",
+          //     },
+          //   },
+          //   error: {
+          //     icon: "❌",
+          //     style: {
+          //       borderColor: "#e76f51",
+          //     },
+          //   },
+          // }}
           toastOptions={{
             duration: 3000,
             style: {
-              background: "#f4a261",
-              color: "#fff",
-              borderRadius: "0.5rem",
+              background: "#fff4e5",
+              color: "#333",
+              borderRadius: "0.6rem",
               fontSize: "1rem",
               fontWeight: "bold",
-              padding: "1rem 1.5rem",
+              textAlign: "center",
             },
             success: {
               icon: "✅",

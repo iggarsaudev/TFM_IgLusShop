@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
@@ -11,12 +11,13 @@ import Button from "../../components/ui/Button/Button";
 import "./profile.css";
 
 export default function Profile() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, canRenew, setCanRenew } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshUser } = useAuth();
+  const [isRenewing, setIsRenewing] = useState(false);
 
   const hasChanges =
     name.trim() !== user?.name ||
@@ -90,6 +91,46 @@ export default function Profile() {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const expiresAtString = localStorage.getItem("token_expires_at");
+      if (!expiresAtString) return;
+
+      const expiresAt = new Date(expiresAtString).getTime();
+      const now = Date.now();
+      const timeLeftMs = expiresAt - now;
+
+      // se activa solo si quedan menos de 5 minutos
+      setCanRenew(timeLeftMs > 0 && timeLeftMs <= 5 * 60 * 1000);
+    }, 30000); // se revisa cada 30 segundos
+
+    return () => clearInterval(interval);
+  }, [setCanRenew]);
+
+  const handleRenewToken = async () => {
+    setIsRenewing(true);
+    try {
+      const { data } = await api.post(
+        "/api/renew-token",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("token_expires_at", data.expires_at);
+      toast.success("Token renewed successfully");
+      setCanRenew(false);
+    } catch (err) {
+      toast.error("Error renewing token");
+    } finally {
+      setIsRenewing(false);
+    }
+  };
+
   return (
     <ContainerForm title="My profile">
       <Form onSubmit={handleSubmit}>
@@ -124,6 +165,12 @@ export default function Profile() {
         <Button
           text={isSubmitting ? "Saving..." : "Save Changes"}
           disabled={!hasChanges || isSubmitting}
+        />
+        <Button
+          text={isRenewing ? "Renewing..." : "Renew Token"}
+          disabled={!canRenew || isRenewing}
+          onClick={handleRenewToken}
+          className="button__renew"
         />
       </Form>
     </ContainerForm>
