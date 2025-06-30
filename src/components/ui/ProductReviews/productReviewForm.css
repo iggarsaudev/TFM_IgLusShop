@@ -76,4 +76,9 @@
     font-size: 1.4rem;
     gap: 0.3rem;
   }
+
+  .review-message {
+    padding: 0 1rem;
+    width: 95%;
+  }
 }
