@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 
 use App\Http\Controllers\Api\AuthController;
@@ -13,48 +12,53 @@ use App\Http\Controllers\Api\OutletController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\CategoryController;
 
-// Registro público
+/*
+|--------------------------------------------------------------------------
+| Rutas públicas (sin autenticación)
+|--------------------------------------------------------------------------
+*/
+
+// Autenticación
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Productos y outlet
+// Recursos públicos
 Route::apiResource('products', ProductController::class)->only(['index', 'show']);
 Route::apiResource('outlet', OutletController::class)->only(['index', 'show']);
-
-// Reseñas
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']);
 
 // Reseñas por producto
 Route::get('/product/{productId}/reviews', [ReviewController::class, 'getByProductId']);
 
-
 /*
 |--------------------------------------------------------------------------
-| Rutas protegidas (requieren autenticación con Sanctum)
+| Rutas protegidas (requieren autenticación)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:sanctum', 'check.token.expiration')->group(function () {
-    // Logout
+Route::middleware(['auth:sanctum', 'check.token.expiration'])->group(function () {
+    // Logout y renovación de token
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    // Renew token
     Route::post('/renew-token', [AuthController::class, 'renewToken']);
 
-    // Perfil de usuario autenticado
+    // Perfil de usuario
     Route::get('/user', [AuthController::class, 'index']);
     Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);
     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
 
-    // Crear, actualizar y borrar reseñas (excepto index y show que son públicos)
+    // Reseñas (crear, actualizar, eliminar)
     Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
 
-    // Pedidos (usuario autenticado)
+    // Pedidos del usuario
     Route::apiResource('orders', OrderController::class)->except(['update']);
+
+    // Ruta adicional para actualizar estado del pedido (opcional)
+    Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
 
 /*
 |--------------------------------------------------------------------------
-| Rutas para administradores (requieren auth + rol admin)
+| Rutas de administrador (auth + rol admin)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:sanctum', 'check.token.expiration', IsAdmin::class])->group(function () {
@@ -64,31 +68,9 @@ Route::middleware(['auth:sanctum', 'check.token.expiration', IsAdmin::class])->g
     // Gestión de proveedores
     Route::apiResource('providers', ProviderController::class);
 
-    // Gestión completa de productos (excepto index y show públicos)
+    // Gestión completa de productos (excepto index/show públicos)
     Route::apiResource('products', ProductController::class)->except(['index', 'show']);
 
-    // Gestión de outlet (excepto index/show/update públicos o deshabilitados)
+    // Gestión de outlet (excepto index/show/update)
     Route::apiResource('outlet', OutletController::class)->except(['index', 'show', 'update']);
 });
-
-Route::apiResource('products', ProductController::class)->only(['index', 'show']); // pública
-
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show']); // pública
-
-Route::apiResource('outlet', OutletController::class)->only(['index', 'show']); // pública
-
-Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']); // pública
-
-Route::middleware('auth:sanctum')->group(function () {
-    // Obtener usuario autenticado
-    Route::get('/user', [AuthController::class, 'index']);
-
-    Route::put('/user/profile', [UserController::class, 'updateOwnProfile']);
-
-    Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
-
-    Route::apiResource('reviews', ReviewController::class)->except(['index', 'show']);
-});
-
-Route::middleware('auth:sanctum')->apiResource('orders', OrderController::class)->except(['update']);
-Route::middleware('auth:sanctum')->patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
