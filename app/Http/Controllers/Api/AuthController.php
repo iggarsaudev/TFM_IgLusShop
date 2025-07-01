@@ -77,7 +77,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'The email is already registered'], 409);
         }
 
-        $user = User::create([
+        User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
@@ -109,7 +109,8 @@ class AuthController extends Controller
      *         description="Successful login",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Successful login"),
-     *             @OA\Property(property="token", type="string", example="1|abc123...")
+     *             @OA\Property(property="token", type="string", example="1|abc123..."),
+     *             @OA\Property(property="expires_at", type="string", example="2025-07-01 12:00:00")
      *         )
      *     ),
      *     @OA\Response(
@@ -127,7 +128,6 @@ class AuthController extends Controller
         }
 
         $tokenName = $user->role === 'admin' ? 'admin-token' : 'api-token';
-
         $tokenResult = $user->createToken($tokenName);
         $token = $user->tokens()->latest()->first();
 
@@ -141,14 +141,34 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Renew the current token
+     * 
+     * @OA\Post(
+     *     path="/api/token/renew",
+     *     summary="Renew the current access token",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="New token generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="1|newtoken..."),
+     *             @OA\Property(property="expires_at", type="string", example="2025-07-01 13:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
     public function renewToken(Request $request)
     {
         $user = $request->user();
 
-        // Eliminamos el token actual
         $request->user()->currentAccessToken()->delete();
 
-        // Creamos uno nuevo
         $tokenName = $user->role === 'admin' ? 'admin-token' : 'api-token';
         $tokenResult = $user->createToken($tokenName);
         $token = $user->tokens()->latest()->first();

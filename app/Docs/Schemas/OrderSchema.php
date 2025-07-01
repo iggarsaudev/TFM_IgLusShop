@@ -23,7 +23,7 @@ namespace App\Docs\Schemas;
  *     @OA\Property(
  *          property="status", 
  *          type="string", 
- *          enum={"pending", "sent", "cancelled", "delivered"}, example="pending"
+ *          enum={"pending", "processing", "sent", "cancelled", "delivered"}, example="pending"
  *     ),
  *     @OA\Property(
  *          property="total", 

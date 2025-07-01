@@ -102,7 +102,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role ?? 'user', // Asigna el rol enviado o 'user' por defecto
+            'role' => $request->role ?? 'user', // Assign role sent or default to 'user'
         ]);
 
         return response()->json([
@@ -252,7 +252,7 @@ class UserController extends Controller
      * Requires authentication and administrator permissions.
      * 
      * If the user doesn't exist, returns a 404 error.
-     * If deleted successfully, returns a 204 code.
+     * If deleted successfully, returns a 200 code with a confirmation message.
      * 
      * @param string $id 
      * @return \Illuminate\Http\JsonResponse Result of the elimination
@@ -303,6 +303,39 @@ class UserController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/user/profile",
+     *     summary="Update authenticated user's own profile",
+     *     tags={"Users"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="password", type="string", format="password", example="newSecurePassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profile updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Profile updated"),
+     *             @OA\Property(property="user", ref="#/components/schemas/User")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation errors",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     )
+     * )
+     */
     public function updateOwnProfile(UpdateOwnProfileRequest $request)
     {
         $user = Auth::user();
@@ -318,6 +351,43 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/avatar",
+     *     summary="Update user avatar",
+     *     tags={"Users"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="avatar",
+     *                     description="Avatar image file",
+     *                     type="string",
+     *                     format="binary"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Avatar updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="avatar", type="string", example="avatars/avatar123.webp")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
     public function updateAvatar(Request $request)
     {
         $request->validate([
