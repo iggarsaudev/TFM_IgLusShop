@@ -8,6 +8,7 @@ import ProfileAvatar from "../../components/ui/ProfileAvatar/ProfileAvatar";
 import Form from "../../components/ui/Form/Form";
 import Input from "../../components/ui/Input/Input";
 import Button from "../../components/ui/Button/Button";
+import Spinner from "../../components/ui/Spinner/Spinner";
 import "./profile.css";
 
 export default function Profile() {
@@ -18,6 +19,7 @@ export default function Profile() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshUser } = useAuth();
   const [isRenewing, setIsRenewing] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false); // estado para el spinner de avatar
 
   const hasChanges =
     name.trim() !== user?.name ||
@@ -77,6 +79,8 @@ export default function Profile() {
     const formData = new FormData();
     formData.append("avatar", file);
 
+    setIsUploadingAvatar(true); // activar spinner
+
     try {
       await api.post("/api/user/avatar", formData, {
         headers: {
@@ -84,10 +88,12 @@ export default function Profile() {
         },
       });
       toast.success("Profile picture updated");
-      refreshUser();
+      await refreshUser();
     } catch (err) {
       toast.error("Error updating profile picture");
       console.error(err);
+    } finally {
+      setIsUploadingAvatar(false); // desactivar spinner
     }
   };
 
@@ -134,14 +140,33 @@ export default function Profile() {
   return (
     <ContainerForm title="My profile">
       <Form onSubmit={handleSubmit}>
-        <ProfileAvatar
-          avatarUrl={
-            user?.avatar
-              ? `http://localhost:8000/storage/${user.avatar}`
-              : undefined
-          }
-          onChange={handleAvatarChange}
-        />
+        <div
+          className="profile__avatar-wrapper"
+          style={{ position: "relative" }}
+        >
+          <ProfileAvatar
+            avatarUrl={
+              user?.avatar
+                ? `http://localhost:8000/storage/${user.avatar}`
+                : undefined
+            }
+            onChange={handleAvatarChange}
+          />
+          {isUploadingAvatar && (
+            <div
+              className="profile__avatar-spinner"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+              }}
+            >
+              <Spinner />
+            </div>
+          )}
+        </div>
         <Input
           label="Name"
           type="text"
@@ -164,11 +189,11 @@ export default function Profile() {
         />
         <Button
           text={isSubmitting ? "Saving..." : "Save Changes"}
-          disabled={!hasChanges || isSubmitting}
+          disabled={!hasChanges || isSubmitting || isUploadingAvatar}
         />
         <Button
           text={isRenewing ? "Renewing..." : "Renew Token"}
-          disabled={!canRenew || isRenewing}
+          disabled={!canRenew || isRenewing || isUploadingAvatar}
           onClick={handleRenewToken}
           className="button__renew"
         />
