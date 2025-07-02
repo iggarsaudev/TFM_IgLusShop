@@ -21,6 +21,8 @@ import RequireAuth from "./RequireAuth";
 import PublicUserLayout from "../layouts/PublicUserLayout";
 import Orders from "../pages/Orders/Orders";
 import Profile from "../pages/Profile/Profile";
+import EditProducts from "../pages/Administrator/EditProducts/EditProducts";
+import EditUsers from "../pages/Administrator/EditUsers/EditUsers";
 
 export default function AppRouter() {
   return (
@@ -51,6 +53,8 @@ export default function AppRouter() {
       <Route element={<RequireAuth allowedRoles={["admin"]} />}>
         <Route element={<PrivateLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin/products" element={<EditProducts />} />
+          <Route path="/admin/users" element={<EditUsers />} />
         </Route>
       </Route>
 

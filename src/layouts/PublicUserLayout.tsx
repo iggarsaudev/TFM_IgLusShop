@@ -1,16 +1,14 @@
-// PublicUserLayout.tsx
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { useLocation } from "react-router-dom";
 import "./publicUserLayout.css";
 
 export default function PublicUserLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
-  const toggleMenu = () => setMenuOpen(!menuOpen);
   const location = useLocation();
   const isProfileRoute = location.pathname.startsWith("/profile");
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
     <div className="global">
@@ -78,11 +76,8 @@ export default function PublicUserLayout() {
           }`}
           onClick={toggleMenu}
         >
-          <span className="header__toggler-icon header__toggler-icon--menu material-symbols-outlined">
-            menu
-          </span>
-          <span className="header__toggler-icon header__toggler-icon--close material-symbols-outlined">
-            close
+          <span className="header__toggler-icon material-symbols-outlined">
+            {menuOpen ? "close" : "menu"}
           </span>
         </button>
       </header>
@@ -90,20 +85,12 @@ export default function PublicUserLayout() {
       <main className="main-layout">
         {user?.role === "user" && isProfileRoute && (
           <>
-            <button
-              className="main-layout__toggle"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              ☰
-            </button>
-
             <aside
               className={`main-layout__sidebar ${
                 menuOpen ? "main-layout__sidebar--open" : ""
               }`}
             >
               <NavLink to="/profile/orders">My Orders</NavLink>
-              {/* end se pone para que el active solo actúe en profile cuando esté en profile  */}
               <NavLink to="/profile" end>
                 My Profile
               </NavLink>
