@@ -30,10 +30,9 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products/>} />
         <Route path="/products/:id" element={<ProductDetail />} />
-        <Route path="/outlet" element={<Outlet />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/outlet" element={<Outlet/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/faqs" element={<Faqs />} />
@@ -41,6 +40,7 @@ export default function AppRouter() {
 
         {/* Páginas accesibles solo para usuarios autenticados con rol "user" */}
         <Route element={<RequireAuth allowedRoles={["user"]} />}>
+          <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/orders" element={<Orders />} />
           <Route path="/profile/orders/:id" element={<OrderDetail />} />
