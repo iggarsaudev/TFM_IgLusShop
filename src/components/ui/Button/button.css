@@ -11,11 +11,11 @@
 }
 
 .button_submit:hover {
-  background-color: #e76f51;
+  background-color: #e48a3f;
 }
 
 .button_submit:focus {
-  background-color: #e76f51;
+  background-color: #e48a3f;
 }
 
 .button_submit:disabled {

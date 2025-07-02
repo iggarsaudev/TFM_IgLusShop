@@ -6,22 +6,27 @@ type ButtonProps = {
   disabled?: boolean;
   isSubmitting?: boolean;
   submittingText?: string;
+  type?: "button" | "submit";
+  onClick?: () => void;
 };
 
 export default function Button({
   text,
   className = "button_submit",
-  disabled,
+  disabled = false,
   isSubmitting = false,
-  submittingText = "Logging in...",
+  submittingText = "Saving...",
+  type = "submit",
+  onClick,
 }: ButtonProps) {
   return (
     <button
       className={className}
-      type="submit"
+      type={type}
       disabled={disabled || isSubmitting}
+      onClick={onClick}
     >
-      {isSubmitting ? submittingText : text}
+      {isSubmitting && type === "submit" ? submittingText : text}
     </button>
   );
 }

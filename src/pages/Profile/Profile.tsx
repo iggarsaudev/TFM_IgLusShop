@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
@@ -8,15 +8,18 @@ import ProfileAvatar from "../../components/ui/ProfileAvatar/ProfileAvatar";
 import Form from "../../components/ui/Form/Form";
 import Input from "../../components/ui/Input/Input";
 import Button from "../../components/ui/Button/Button";
+import Spinner from "../../components/ui/Spinner/Spinner";
 import "./profile.css";
 
 export default function Profile() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, canRenew, setCanRenew } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshUser } = useAuth();
+  const [isRenewing, setIsRenewing] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false); // estado para el spinner de avatar
 
   const hasChanges =
     name.trim() !== user?.name ||
@@ -76,6 +79,8 @@ export default function Profile() {
     const formData = new FormData();
     formData.append("avatar", file);
 
+    setIsUploadingAvatar(true); // activar spinner
+
     try {
       await api.post("/api/user/avatar", formData, {
         headers: {
@@ -83,24 +88,85 @@ export default function Profile() {
         },
       });
       toast.success("Profile picture updated");
-      refreshUser();
+      await refreshUser();
     } catch (err) {
       toast.error("Error updating profile picture");
       console.error(err);
+    } finally {
+      setIsUploadingAvatar(false); // desactivar spinner
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const expiresAtString = localStorage.getItem("token_expires_at");
+      if (!expiresAtString) return;
+
+      const expiresAt = new Date(expiresAtString).getTime();
+      const now = Date.now();
+      const timeLeftMs = expiresAt - now;
+
+      // se activa solo si quedan menos de 5 minutos
+      setCanRenew(timeLeftMs > 0 && timeLeftMs <= 5 * 60 * 1000);
+    }, 30000); // se revisa cada 30 segundos
+
+    return () => clearInterval(interval);
+  }, [setCanRenew]);
+
+  const handleRenewToken = async () => {
+    setIsRenewing(true);
+    try {
+      const { data } = await api.post(
+        "/api/renew-token",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("token_expires_at", data.expires_at);
+      toast.success("Token renewed successfully");
+      setCanRenew(false);
+    } catch (err) {
+      toast.error("Error renewing token");
+    } finally {
+      setIsRenewing(false);
     }
   };
 
   return (
     <ContainerForm title="My profile">
       <Form onSubmit={handleSubmit}>
-        <ProfileAvatar
-          avatarUrl={
-            user?.avatar
-              ? `http://localhost:8000/storage/${user.avatar}`
-              : undefined
-          }
-          onChange={handleAvatarChange}
-        />
+        <div
+          className="profile__avatar-wrapper"
+          style={{ position: "relative" }}
+        >
+          <ProfileAvatar
+            avatarUrl={
+              user?.avatar
+                ? `http://localhost:8000/storage/${user.avatar}`
+                : undefined
+            }
+            onChange={handleAvatarChange}
+          />
+          {isUploadingAvatar && (
+            <div
+              className="profile__avatar-spinner"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+              }}
+            >
+              <Spinner />
+            </div>
+          )}
+        </div>
         <Input
           label="Name"
           type="text"
@@ -123,7 +189,13 @@ export default function Profile() {
         />
         <Button
           text={isSubmitting ? "Saving..." : "Save Changes"}
-          disabled={!hasChanges || isSubmitting}
+          disabled={!hasChanges || isSubmitting || isUploadingAvatar}
+        />
+        <Button
+          text={isRenewing ? "Renewing..." : "Renew Token"}
+          disabled={!canRenew || isRenewing || isUploadingAvatar}
+          onClick={handleRenewToken}
+          className="button__renew"
         />
       </Form>
     </ContainerForm>

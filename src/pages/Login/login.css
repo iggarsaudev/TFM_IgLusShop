@@ -8,11 +8,3 @@
   text-decoration: none;
   font-weight: bold;
 }
-
-.login__link-register:hover {
-  color: #e76f51;
-}
-
-.login__link-register:focus {
-  color: #e76f51;
-}

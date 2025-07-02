@@ -13,6 +13,9 @@ export type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: (token?: string) => Promise<User | null>;
+  tokenExpiresAt?: Date | null;
+  canRenew: boolean;
+  setCanRenew: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export interface UserRegister {
