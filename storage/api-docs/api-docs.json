@@ -156,6 +156,10 @@
                                         "token": {
                                             "type": "string",
                                             "example": "1|abc123..."
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "example": "2025-07-01 12:00:00"
                                         }
                                     },
                                     "type": "object"
@@ -167,6 +171,46 @@
                         "description": "Invalid credentials"
                     }
                 }
+            }
+        },
+        "/api/token/renew": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Renew the current access token",
+                "description": "Renew the current token",
+                "operationId": "b93cb1163d3ed6f65508cd596d1c3b95",
+                "responses": {
+                    "200": {
+                        "description": "New token generated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|newtoken..."
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "example": "2025-07-01 13:00:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/logout": {
@@ -205,13 +249,43 @@
                 ]
             }
         },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Category List",
+                "description": "Returns a list of all categoires.",
+                "operationId": "ac9c4d978ea4e5b72915ca9728e5b8b1",
+                "responses": {
+                    "200": {
+                        "description": "Order List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Order"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/orders": {
             "get": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Order List",
-                "description": "Returns a list of all orders registered in the database.\n\nRequires authentication.\n\nIf you are the admin role, it will display all orders. If you are a user, it will only display your own orders.\n\nThis function retrieves all records from the Order model and returns them in JSON format. Each order includes the user_id, date, status, and total.",
+                "description": "Returns a list of all orders registered in the database.\n\nRequires authentication.\n\nIf you are the admin role, it will display all orders. If you are a user, it will only display your own orders.",
                 "operationId": "955bb77a45ae173a485fadb8befed93f",
                 "responses": {
                     "200": {
@@ -242,7 +316,7 @@
                     "Orders"
                 ],
                 "summary": "Create new order",
-                "description": "Creates a new order with the provided data.\n\nRequires authentication.\n\nValidates required fields before storing the resource.\nReturns the created user ID and a confirmation message if the operation is successful.",
+                "description": "Creates a new order with the provided data.\n\nRequires authentication.",
                 "operationId": "2123ba58dadb22bd6f2c8081af562230",
                 "requestBody": {
                     "required": true,
@@ -292,7 +366,7 @@
                     "Orders"
                 ],
                 "summary": "Show order",
-                "description": "Returns data for a specific order.\n\nRequires authentication.\n\nIf you are the admin role, you will be able to access all orders; if you are a user, you will only access your own orders.\n\nSearches for the order by its ID. If it is not found, an error is returned.",
+                "description": "Returns data for a specific order.\n\nRequires authentication.",
                 "operationId": "88d27387b1e409e075c18609d4a0c300",
                 "parameters": [
                     {
@@ -343,7 +417,7 @@
                     "Orders"
                 ],
                 "summary": "Cancel order",
-                "description": "Cancel an order by its ID.\n\nRequires authentication.\n\nIf you are the admin role, you can cancel any order. If you are a user, you will only cancel your own orders.\n\nIf the order doesn't exist, a 404 error is returned.\nIf the order is canceled successfully, a 204 code is returned.",
+                "description": "Cancels an order by its ID.\n\nRequires authentication.",
                 "operationId": "bab875a1ed962fb33565ab9b48c0d494",
                 "parameters": [
                     {
@@ -389,7 +463,7 @@
                     "Orders"
                 ],
                 "summary": "Update order status",
-                "description": "Updates the data of an existing order.\n\nRequires authentication.\n\nIf you are an admin role, you can update all orders; if you are a user, you will only update your orders.\n\nAllows you to update the order status.\nReturns the updated order if everything is correct.",
+                "description": "Updates the status of an existing order.\n\nRequires authentication.",
                 "operationId": "6171b061f04a36658d9bca106ece32b5",
                 "parameters": [
                     {
@@ -1388,7 +1462,7 @@
                     "Reviews"
                 ],
                 "summary": "Delete a review",
-                "description": "Deletes a review by its ID.\n\nRequires authentication.\n\nThe review can only be deleted if it was created by the authenticated user.\n\nIf the review does not exist, returns a 404 error.\nIf successfully deleted, returns a 200 status code.",
+                "description": "Deletes a review by its ID.\n\nRequires authentication.\n\nThe review can only be deleted if it was created by the authenticated user.\n\nIf the review does not exist, returns a 404 error.\nIf successfully deleted, returns a 200 status code and confirmation message.",
                 "operationId": "3c59dee71ea9b81870ffa682d1ff2bae",
                 "parameters": [
                     {
@@ -1402,8 +1476,21 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Review deleted"
+                    "200": {
+                        "description": "Review successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review successfully deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -1427,6 +1514,45 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/products/{productId}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get reviews by product ID",
+                "description": "Returns the list of reviews for a specific product.",
+                "operationId": "9595b1775804f5abdcba28b0ec9a01ae",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of reviews for the product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Review"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
             }
         },
         "/api/users": {
@@ -1665,7 +1791,7 @@
                     "Users"
                 ],
                 "summary": "Delete a user",
-                "description": "Deletes a user by their ID.\n\nRequires authentication and administrator permissions.\n\nIf the user doesn't exist, returns a 404 error.\nIf deleted successfully, returns a 204 code.",
+                "description": "Deletes a user by their ID.\n\nRequires authentication and administrator permissions.\n\nIf the user doesn't exist, returns a 404 error.\nIf deleted successfully, returns a 200 code with a confirmation message.",
                 "operationId": "0b4133ed462528a5e648b88ead11e929",
                 "parameters": [
                     {
@@ -1697,6 +1823,133 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/profile": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update authenticated user's own profile",
+                "operationId": "d1eb69ad7c0eeff5a5013192a970df47",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newSecurePassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/avatar": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user avatar",
+                "operationId": "939f87ba3ebe48b8940fe0807d8f64c8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "avatar": {
+                                        "description": "Avatar image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avatar updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "avatar": {
+                                            "type": "string",
+                                            "example": "avatars/avatar123.webp"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1816,6 +2069,7 @@
                         "type": "string",
                         "enum": [
                             "pending",
+                            "processing",
                             "sent",
                             "cancelled",
                             "delivered"
@@ -2397,6 +2651,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
         },
         {
             "name": "Orders",

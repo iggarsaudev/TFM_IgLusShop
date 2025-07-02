@@ -251,7 +251,7 @@ class ReviewController extends Controller
      * The review can only be deleted if it was created by the authenticated user.
      * 
      * If the review does not exist, returns a 404 error.
-     * If successfully deleted, returns a 200 status code.
+     * If successfully deleted, returns a 200 status code and confirmation message.
      * 
      * @param string $id 
      * @return \Illuminate\Http\JsonResponse Deletion result
@@ -269,46 +269,84 @@ class ReviewController extends Controller
      *          @OA\Schema(type="integer") 
      *      ), 
      *      @OA\Response( 
-     *          response=204, 
-     *          description="Review deleted" 
+     *          response=200, 
+     *          description="Review successfully deleted", 
+     *          @OA\JsonContent( 
+     *              @OA\Property(property="message", type="string", example="Review successfully deleted") 
+     *          ) 
      *      ), 
      *      @OA\Response(
      *         response=401,
      *         description="Unauthenticated"
-     *      ),
-     *      @OA\Response(
+     *     ),
+     *     @OA\Response(
      *         response=403,
      *         description="Unauthorized"
-     *      ),
-     *      @OA\Response( 
+     *     ), 
+     *     @OA\Response( 
      *          response=404, 
      *          description="Resource not found", 
-     *          @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *          @OA\JsonContent( 
+     *              ref="#/components/schemas/NotFoundError" 
+     *          ) 
      *      ) 
      * ) 
      */
     public function destroy(string $id)
     {
         $review = Review::find($id);
-        $user_id = Auth::id();
 
         if (!$review) {
             throw new ResourceNotFoundException();
         }
+
+        $user_id = Auth::id();
 
         if ($user_id !== $review->user_id) {
             return response()->json([
                 'message' => 'Unauthorized.'
             ], 403);
         }
+
         $review->delete();
 
         return response()->json([
-            'message' => 'Review deleted.'
+            'message' => 'Review successfully deleted'
         ], 200);
     }
 
-    public function getByProductId($productId)
+    /**
+     * Returns the list of reviews for a specific product.
+     * 
+     * @param string $productId
+     * @return \Illuminate\Http\JsonResponse List of reviews of the product
+     * 
+     * @OA\Get(
+     *     path="/api/products/{productId}/reviews",
+     *     summary="Get reviews by product ID",
+     *     tags={"Reviews"},
+     *     @OA\Parameter(
+     *         name="productId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of reviews for the product",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Review")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
+    public function getByProductId(string $productId)
     {
         $reviews = Review::with('user')
             ->where('product_id', $productId)
