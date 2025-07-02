@@ -2,7 +2,6 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
-import { useLocation } from "react-router-dom";
 import "./publicUserLayout.css";
 
 export default function PublicUserLayout() {
