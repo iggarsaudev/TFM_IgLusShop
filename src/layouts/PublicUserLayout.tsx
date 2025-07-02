@@ -1,9 +1,12 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
+import { useLocation } from "react-router-dom";
 import "./publicUserLayout.css";
 
 export default function PublicUserLayout() {
+  const { totalItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
   const location = useLocation();
@@ -66,7 +69,11 @@ export default function PublicUserLayout() {
 
           <NavLink to="/cart" className="header__cart-btn">
             <span className="material-symbols-outlined">shopping_cart</span>
-            <span className="cart__count hidden">0</span>
+            {totalItems != 0 ? (
+              <span className="cart__count">{totalItems} </span>
+            ) : (
+              <span className="cart__count hidden">0</span>
+            )}
           </NavLink>
         </div>
 
@@ -98,7 +105,7 @@ export default function PublicUserLayout() {
           </>
         )}
 
-        <section className="main-layout__content">
+        <section className="main-layout__content p-4">
           <Outlet />
         </section>
       </main>
