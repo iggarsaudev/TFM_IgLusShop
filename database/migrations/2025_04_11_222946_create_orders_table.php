@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('date')->useCurrent();
-            $table->enum('status', ['pending', 'sent', 'cancelled', 'delivered'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'sent', 'cancelled', 'delivered'])->default('pending');
             $table->decimal('total', 10, 2)->default(0);
             $table->timestamps();
         });
