@@ -7,3 +7,22 @@
 .category-link:hover{
     color: #e76f51;
 }
+
+.categories {
+  background-color: white;
+  border-bottom: 1px solid #4b4b4b;
+  border-radius: 0.25rem 0.25rem 0 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  overflow-x: auto;
+}
+
+.categories__list {
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+}

@@ -15,6 +15,17 @@ export function useProducts() {
   });
 }
 
+// Obtener todos los productos
+export function useOutlet() {
+  return useQuery<ProductType[]>({
+    queryKey: ["outlet"],
+    queryFn: async () => {
+      const res = await api.get("/api/outlet");
+      return res.data;
+    },
+  });
+}
+
 // Obtener un producto por id
 export function useProduct(id?: number) {
   return useQuery<ProductType>({

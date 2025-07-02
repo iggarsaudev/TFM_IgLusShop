@@ -33,8 +33,8 @@ export default function NavBarCategories({section }:NavBarCategoriesProps) {
         fetchData();
     }, []);
       return (
-      <nav className="bg-white border-b shadow mb-4 p-2">
-        <ul className="flex gap-4 overflow-x-auto mb-0">
+      <nav className="categories">
+        <ul className="categories__list">
           {categories.map((category) => (
             <li key={category.id}>
               <Link

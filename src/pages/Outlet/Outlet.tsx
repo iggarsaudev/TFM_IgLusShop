@@ -4,11 +4,13 @@ import NavBarCategories from "../../components/common/NavBarCategories/NavBarCat
 import type  { ProductType } from './../../types/productTypes.ts';
 import api from "../../services/api";
 import { useSearchParams } from "react-router";
+import "./outlet.css"
+import type { AxiosResponse } from 'axios';
 
-async function getOutlet() {
+
+async function getOutlet():Promise<AxiosResponse<ProductType[]>> {
   try {
     const response = await api.get("/api/outlet");
-    console.log(response)
     return response;
   } catch (error) {
     console.error("Error while fetching products:", error);
@@ -27,7 +29,9 @@ export default function Outlet() {
         const fetchData = async () => {
             try {
                 const response = await getOutlet();
-                setProducts(response.data); // Axios devuelve la data en response.data
+                const data = response.data
+                
+                setProducts(data); // Axios devuelve la data en response.data
             } catch {
                 console.error('Failed to fetch product');
             } finally {
@@ -37,10 +41,10 @@ export default function Outlet() {
 
         fetchData();
     }, []);
-      return (<div className="max-w-7xl mx-auto">
+      return (<div className="outlet-page">
               <NavBarCategories section='outlet'/>
               {loading ?  <p>Loading products...</p> :
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                <div className="outlet-page__grid">
                     {filteredProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}

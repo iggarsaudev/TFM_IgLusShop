@@ -5,7 +5,7 @@ import Home from "../pages/Home/Home";
 import Products from "../pages/Products/Products";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Outlet from "../pages/Outlet/Outlet";
-import { Cart } from "../pages/Cart/Cart";
+import Cart from "../pages/Cart/Cart";
 import Contact from "../pages/Contact/Contact";
 import Reviews from "../pages/Reviews/Reviews";
 import Faqs from "../pages/Faqs/Faqs";
@@ -30,9 +30,9 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products/>} />
         <Route path="/products/:id" element={<ProductDetail />} />
-        <Route path="/outlet" element={<Outlet />} />
+        <Route path="/outlet" element={<Outlet/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/faqs" element={<Faqs />} />
