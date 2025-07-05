@@ -339,6 +339,12 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "Some products do not exist"
+                    },
+                    "400": {
+                        "description": "Not enough stock for the product"
+                    },
                     "401": {
                         "description": "Unauthenticated"
                     },
