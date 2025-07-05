@@ -76,14 +76,17 @@ export default function PrivateLayout() {
             menuOpen ? "main-layout__sidebar--open" : ""
           }`}
         >
-          <NavLink to="/dashboard" className="sidebar-nav__link">
-            Dashboard
+          <NavLink to="/admin/users" className="sidebar-nav__link">
+            Edit Users
           </NavLink>
           <NavLink to="/admin/products" className="sidebar-nav__link">
             Edit Products
           </NavLink>
-          <NavLink to="/admin/users" className="sidebar-nav__link">
-            Edit Users
+          <NavLink to="/admin/create-products" className="sidebar-nav__link">
+            Create Products
+          </NavLink>
+          <NavLink to="/dashboard" className="sidebar-nav__link">
+            Dashboard
           </NavLink>
 
           <div className="sidebar__actions">

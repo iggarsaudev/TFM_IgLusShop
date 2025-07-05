@@ -48,3 +48,21 @@
 .edit-users__delete:hover {
   background-color: #c5303c;
 }
+
+.edit-users__filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.edit-users__search,
+.edit-users__select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.edit-users__role-btn.active {
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+}

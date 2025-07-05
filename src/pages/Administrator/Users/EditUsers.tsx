@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
+import SearchInput from "../../../components/ui/SearchInput/SearchInput";
 import "./editUsers.css";
 
 interface User {
@@ -14,6 +15,8 @@ interface User {
 export default function EditUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState<"all" | "user" | "admin">("all");
 
   const fetchUsers = async () => {
     try {
@@ -53,13 +56,59 @@ export default function EditUsers() {
     fetchUsers();
   }, []);
 
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesRole = filterRole === "all" || user.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
+
   if (loading) return <Spinner />;
 
   return (
     <section className="edit-users">
       <h2 className="edit-users__title">Manage Users</h2>
+
+      <div className="edit-users__controls">
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Search by name"
+        />
+        <div className="edit-users__filters">
+          <label>
+            <input
+              type="radio"
+              name="role-filter"
+              checked={filterRole === "all"}
+              onChange={() => setFilterRole("all")}
+            />
+            All
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role-filter"
+              checked={filterRole === "user"}
+              onChange={() => setFilterRole("user")}
+            />
+            User
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role-filter"
+              checked={filterRole === "admin"}
+              onChange={() => setFilterRole("admin")}
+            />
+            Admin
+          </label>
+        </div>
+      </div>
+
       <ul className="edit-users__list">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <li key={user.id} className="edit-users__item">
             <div className="edit-users__info">
               <strong>{user.name}</strong> ({user.email})
