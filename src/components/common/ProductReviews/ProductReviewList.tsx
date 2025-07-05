@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import api from "../../../services/api";
 import toast from "react-hot-toast";
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../../ui/Spinner/Spinner";
 import type { Review } from "../../../types/review";
 import "./productReviewList.css";
 

@@ -38,6 +38,18 @@ export function useProduct(id?: number) {
   });
 }
 
+// Obtener un producto por id
+export function useOutletProduct(id?: number) {
+  return useQuery<ProductType>({
+    queryKey: ["products", id],
+    queryFn: async () => {
+      const res = await api.get(`/api/outlet/${id}`);
+      return res.data;
+    },
+    enabled: !!id, // Solo ejecuta si hay id
+  });
+}
+
 // Crear producto
 export function useCreateProduct() {
   const queryClient = useQueryClient();
@@ -53,7 +65,7 @@ export function useCreateProduct() {
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, product }: { id: number; product: Partial<ProductType> }) => api.put(`/api/products/${id}`, product),
+    mutationFn: async ({ id, product }: { id: number; product: Partial<ProductType> }) => api.put(`/api/products/${id}`, product),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },

@@ -297,4 +297,8 @@ body {
   .main-layout__toggle {
     display: block;
   }
+
+  .main-layout{
+    display: block;
+  }
 }

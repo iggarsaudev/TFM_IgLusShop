@@ -7,8 +7,6 @@ import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Outlet from "../pages/Outlet/Outlet";
 import Cart from "../pages/Cart/Cart";
 import Contact from "../pages/Contact/Contact";
-import Reviews from "../pages/Reviews/Reviews";
-import Faqs from "../pages/Faqs/Faqs";
 import Legal from "../pages/Legal/Legal";
 import Cookies from "../pages/Cookies/Cokies";
 import NotFound from "../pages/NotFound/NotFound";
@@ -16,7 +14,6 @@ import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import OrderDetail from "../pages/OrderDetail/OrderDetail";
-
 import RequireAuth from "./RequireAuth";
 import PublicUserLayout from "../layouts/PublicUserLayout";
 import Orders from "../pages/Orders/Orders";
@@ -35,11 +32,13 @@ export default function AppRouter() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route
+          path="/products/:id"
+          element={<ProductDetail type="product" />}
+        />
         <Route path="/outlet" element={<Outlet />} />
+        <Route path="/outlet/:id" element={<ProductDetail type="outlet" />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/reviews" element={<Reviews />} />
-        <Route path="/faqs" element={<Faqs />} />
         <Route path="*" element={<NotFound />} />
 
         {/* Páginas accesibles solo para usuarios autenticados con rol "user" */}
