@@ -71,6 +71,12 @@ Route::middleware(['auth:sanctum', 'check.token.expiration', IsAdmin::class])->g
     // Gestión completa de productos (excepto index/show públicos)
     Route::apiResource('products', ProductController::class)->except(['index', 'show']);
 
+    // Actualización de imagen del producto
+    Route::post('/products/{id}/image', [ProductController::class, 'updateImage']);
+
+    // Devuelve todos los productos, con y sin outlet
+    Route::get('/products/full/{id}', [ProductController::class, 'getFullProduct']);
+
     // Gestión de outlet (excepto index/show/update)
     Route::apiResource('outlet', OutletController::class)->except(['index', 'show', 'update']);
 });
