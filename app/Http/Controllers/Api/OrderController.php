@@ -61,12 +61,31 @@ class OrderController extends Controller
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/CreateOrderRequest")),
      *     @OA\Response(response=201, description="Order created successfully", @OA\JsonContent(ref="#/components/schemas/Order")),
+     *     @OA\Response(response=404, description="Some products do not exist"),
+     *     @OA\Response(response=400, description="Not enough stock for the product"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=422, description="Validation errors", @OA\JsonContent(ref="#/components/schemas/ValidationError"))
      * )
      */
     public function store(StoreOrderRequest $request)
     {
+        #Comprobacion de si el producto existe y si hay suficiente stock
+        foreach ($request->items as $item) {
+            $product = Product::find($item['product_id']);
+
+            if (!$product) {
+                return response()->json([
+                    'error' => "Some products do not exist"
+                ], 404);
+            }
+
+            if ($product->stock < $item['quantity']) {
+                return response()->json([
+                    'error' => "Not enough stock for the product",
+                ], 400);
+            }
+        }
+
         return DB::transaction(function () use ($request) {
             $user = Auth::user();
             $total = 0;
@@ -87,6 +106,10 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                     'unit_price' => $product->price,
                 ]);
+
+                // Actualizar stock
+                $product->stock -= $item['quantity'];
+                $product->save();
 
                 $total += $subtotal;
             }
