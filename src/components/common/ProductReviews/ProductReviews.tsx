@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import ProductReviewList from "./ProductReviewList";
 import ProductReviewForm from "./ProductReviewForm";
 import api from "../../../services/api";
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../../ui/Spinner/Spinner";
 import type { Review } from "../../../types/review";
 
 interface Props {

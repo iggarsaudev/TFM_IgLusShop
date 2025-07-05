@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import api from "../../../services/api";
 import toast from "react-hot-toast";
-import Button from "../Button/Button";
+import Button from "../../ui/Button/Button";
 import "./productReviewForm.css";
 
 interface Props {

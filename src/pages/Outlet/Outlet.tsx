@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from "react-router";
 import { ProductCard } from "../../components/common/ProductCard/ProductCard"
 import NavBarCategories from "../../components/common/NavBarCategories/NavBarCategories.tsx"
-import type  { ProductType } from './../../types/productTypes.ts';
+import Spinner from "../../components/ui/Spinner/Spinner.tsx";
 import api from "../../services/api";
-import { useSearchParams } from "react-router";
-import "./outlet.css"
+import type  { ProductType } from './../../types/productTypes.ts';
 import type { AxiosResponse } from 'axios';
+import "./outlet.css"
 
 
 async function getOutlet():Promise<AxiosResponse<ProductType[]>> {
@@ -43,10 +44,10 @@ export default function Outlet() {
     }, []);
       return (<div className="outlet-page">
               <NavBarCategories section='outlet'/>
-              {loading ?  <p>Loading products...</p> :
+              {loading ?  <div className="loading-overlay"><Spinner /></div> :
                 <div className="outlet-page__grid">
                     {filteredProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCard key={product.id} product={product} detail={false} />
                     ))}
                 </div>
                 }
