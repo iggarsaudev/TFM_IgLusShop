@@ -11,7 +11,6 @@ type NavBarCategoriesProps = {
 async function getCategories() {
   try {
     const response = await api.get("/api/categories");
-    console.log(response)
     return response;
   } catch (error) {
     console.error("Error while fetching products:", error);

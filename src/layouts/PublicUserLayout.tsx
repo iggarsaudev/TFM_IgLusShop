@@ -43,11 +43,6 @@ export default function PublicUserLayout() {
                 Contact
               </NavLink>
             </li>
-            <li className="header__nav-item">
-              <NavLink to="/reviews" className="header__nav-link">
-                Reviews
-              </NavLink>
-            </li>
           </ul>
         </nav>
 

@@ -1,4 +1,3 @@
-import type { CartItem } from "../../types/productTypes.ts"
 import { Link } from "react-router-dom"
 import { useProducts,useOutlet } from "../../services/productService.ts";
 import {useCreateOrder} from "../../services/orderService.ts";
@@ -10,7 +9,7 @@ import useCart from "../../hooks/useCart.ts";
 
 
 const Cart = () => {
-  const { cart, setCart } = useCart()
+  const { cart, clearCart, removeFromCart, updateQuantity } = useCart()
   
   const { data: normalProducts } = useProducts()
   const { data: outletProducts } = useOutlet();
@@ -18,32 +17,9 @@ const Cart = () => {
   const allProducts = [...(normalProducts || []), ...(outletProducts || [])];
   const { mutate, isSuccess, error } = useCreateOrder();
 
-  console.log(cart)
-
-  const updateQuantity = (product: CartItem, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCart(product.id)
-      return
-    }
-    if (newQuantity > product.stock) {
-      newQuantity = product.stock;
-    }
-    setCart(cart.map(item =>
-      item.id === product.id ? { ...item, quantity: newQuantity } : item
-    ))
-  }
-
-  const removeFromCart = (productId: number) => {
-    setCart(cart.filter(item => item.id !== productId))
-  }
-
-  const clearCart = () => {
-    setCart([])
-  }
-
   const subtotal = cart.reduce((total, item) => {
     const product = allProducts?.find(p => p.id === item.id)
-    const price = product? (product.has_discount ? parseFloat((product.price * (1 - product.discount / 100)).toFixed(2))* item.quantity : parseFloat(String(product.price)) * item.quantity) : 0
+    const price = product ? (product.has_discount ? parseFloat((product.price * (1 - product.discount / 100)).toFixed(2))* item.quantity : parseFloat(String(product.price)) * item.quantity) : 0
     return total + price
   }, 0)
 
@@ -61,6 +37,7 @@ const Cart = () => {
     };
 
     mutate(orderData);
+    clearCart()
   };
 
   return (
