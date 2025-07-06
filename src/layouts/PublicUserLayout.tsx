@@ -108,7 +108,7 @@ export default function PublicUserLayout() {
           </>
         )}
 
-        <section className="main-layout__content p-4">
+        <section className="main-layout__content">
           <Outlet />
         </section>
       </main>
