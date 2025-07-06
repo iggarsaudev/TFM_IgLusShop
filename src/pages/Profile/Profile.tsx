@@ -11,7 +11,7 @@ import Button from "../../components/ui/Button/Button";
 import Spinner from "../../components/ui/Spinner/Spinner";
 import "./profile.css";
 
-export default function Profile() {
+const Profile = ()  => {
   const { user, setUser, canRenew, setCanRenew } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
@@ -201,3 +201,4 @@ export default function Profile() {
     </ContainerForm>
   );
 }
+export default Profile;

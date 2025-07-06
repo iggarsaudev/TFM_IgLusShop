@@ -11,7 +11,7 @@ const steps = [
   { key: "delivered", label: "Delivered", icon: "✅" },
 ];
 
-export default function OrderStatusBar({ status }: Props) {
+const OrderStatusBar = ({ status }: Props) =>  {
   const currentIndex = steps.findIndex((step) => step.key === status);
   const isCancelled = status === "cancelled";
 
@@ -38,3 +38,4 @@ export default function OrderStatusBar({ status }: Props) {
     </div>
   );
 }
+export default OrderStatusBar;

@@ -19,7 +19,7 @@ import PublicUserLayout from "../layouts/PublicUserLayout";
 import Orders from "../pages/Orders/Orders";
 import Profile from "../pages/Profile/Profile";
 
-export default function AppRouter() {
+const AppRouter = () => {
   return (
     <Routes>
       {/* Rutas públicas o de usuario logado con layout combinado */}
@@ -56,3 +56,4 @@ export default function AppRouter() {
     </Routes>
   );
 }
+export default AppRouter;

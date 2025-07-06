@@ -10,14 +10,14 @@ interface PasswordInputProps {
   name?: string;
 }
 
-export default function PasswordInput({
+const PasswordInput = ({
   value,
   onChange,
   placeholder = "Enter password",
   label,
   required = false,
   name,
-}: PasswordInputProps) {
+}: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -48,3 +48,4 @@ export default function PasswordInput({
     </label>
   );
 }
+export default PasswordInput;

@@ -6,7 +6,7 @@ import Button from "../components/ui/Button/Button";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
-export default function PrivateLayout() {
+const PrivateLayout = () => {
   const { logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isRenewing, setIsRenewing] = useState(false);
@@ -45,7 +45,7 @@ export default function PrivateLayout() {
       localStorage.setItem("token_expires_at", data.expires_at);
       toast.success("Token renewed successfully");
       setCanRenew(false);
-    } catch (err) {
+    } catch {
       toast.error("Error renewing token");
     } finally {
       setIsRenewing(false);
@@ -91,3 +91,4 @@ export default function PrivateLayout() {
     </div>
   );
 }
+export default PrivateLayout

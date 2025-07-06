@@ -6,7 +6,7 @@ import useCart from "../hooks/useCart";
 import { useLocation } from "react-router-dom";
 import "./publicUserLayout.css";
 
-export default function PublicUserLayout() {
+const PublicUserLayout = () => {
   const { totalItems } = useCart();  
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
@@ -133,3 +133,4 @@ export default function PublicUserLayout() {
     </div>
   );
 }
+export default PublicUserLayout;

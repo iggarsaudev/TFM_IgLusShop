@@ -5,7 +5,7 @@ import "./home.css"
 import FadeInSection from "./FadeInSection"
 import type { ProductType } from "../../types/productTypes.ts";
 
-export default function Home() {
+const Home = () => {
   const { data: normalProducts } = useProducts();
   const { data: outletProducts } = useOutlet();
   const navigate = useNavigate();
@@ -60,3 +60,4 @@ export default function Home() {
     </FadeInSection>
   </div>)
 }
+export default Home;

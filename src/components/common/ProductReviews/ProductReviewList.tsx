@@ -12,11 +12,11 @@ interface Props {
   onUpdate: () => void;
 }
 
-export default function ProductReviewList({
+const ProductReviewList = ({
   reviews,
   onDelete,
   onUpdate,
-}: Props) {
+}: Props) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
@@ -162,3 +162,5 @@ export default function ProductReviewList({
     </section>
   );
 }
+
+export default ProductReviewList;

@@ -1,6 +1,6 @@
 import "./notFound.css";
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <div className="not-found">
       <div className="not-found__content">
@@ -15,3 +15,4 @@ export default function NotFound() {
     </div>
   );
 }
+export default NotFound;

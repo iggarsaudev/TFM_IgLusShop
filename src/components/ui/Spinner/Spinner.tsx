@@ -1,9 +1,10 @@
 import "./spinner.css";
 
-export default function Loading() {
+const Loading = () => {
   return (
     <div className="spinner-wrapper">
       <div className="spinner" />
     </div>
   );
 }
+export default Loading

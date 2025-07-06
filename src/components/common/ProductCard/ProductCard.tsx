@@ -12,7 +12,7 @@ interface ProductCardProps {
     detail:boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product,detail }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product,detail }) => {
     const navigate = useNavigate();
     const { cart, setCart,  updateQuantity } = useCart()
     const { isAuthenticated } = useAuth();
@@ -101,3 +101,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product,detail }) => {
     );
 };
 
+export default ProductCard

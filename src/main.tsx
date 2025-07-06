@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import { CartProvider } from "./context/CartProvider";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { TanstackQueryProvider } from "../src/components/provider"
+import TanstackQueryProvider  from "../src/components/provider"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

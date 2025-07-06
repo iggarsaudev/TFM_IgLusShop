@@ -9,7 +9,7 @@ interface Props {
   productId: number;
 }
 
-export default function ProductReviews({ productId }: Props) {
+const ProductReviews = ({ productId }: Props)=> {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -54,3 +54,4 @@ export default function ProductReviews({ productId }: Props) {
     </section>
   );
 }
+export default ProductReviews
