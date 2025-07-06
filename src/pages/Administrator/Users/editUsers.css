@@ -1,0 +1,68 @@
+.edit-users {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.edit-users__title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.edit-users__list {
+  list-style: none;
+  padding: 0;
+}
+
+.edit-users__item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  background: #fafafa;
+}
+
+.edit-users__info {
+  font-size: 1.2rem;
+}
+
+.edit-users__roles {
+  display: flex;
+  gap: 2rem;
+}
+
+.edit-users__delete {
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  background-color: #e63946;
+  color: white;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.edit-users__delete:hover {
+  background-color: #c5303c;
+}
+
+.edit-users__filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.edit-users__search,
+.edit-users__select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.edit-users__role-btn.active {
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+}
