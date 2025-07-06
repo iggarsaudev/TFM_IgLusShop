@@ -1,14 +1,16 @@
 import React from "react";
 import "./input.css";
 
-
 type InputProps = {
   label: string;
   type: string;
   name: string;
-  value: string;
+  value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
   placeholder?: string;
 };
 

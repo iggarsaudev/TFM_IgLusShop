@@ -1,0 +1,106 @@
+.edit-product-form {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1rem 0.4rem rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+.edit-product-form__title {
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  font-weight: 600;
+  color: #222;
+}
+
+.edit-product-form__label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+}
+
+.edit-product-form__label select,
+.edit-product-form__label textarea,
+.edit-product-form__label input[type="text"],
+.edit-product-form__label input[type="number"],
+.edit-product-form__label input[type="file"] {
+  margin-top: 0.3rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.edit-product-form__label select:focus,
+.edit-product-form__label textarea:focus,
+.edit-product-form__label input[type="text"]:focus,
+.edit-product-form__label input[type="number"]:focus,
+.edit-product-form__label input[type="file"]:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.edit-product-form__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+}
+
+.edit-product-form__preview {
+  margin-top: 1rem;
+  max-width: 12rem;
+  position: relative;
+}
+
+.edit-product-form__preview img {
+  max-width: 100%;
+  border-radius: 0.3rem;
+  border: 1px solid #bbb;
+}
+
+.edit-product-form__buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.edit-product-form__btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.edit-product-form__btn--submit {
+  background-color: #4caf50;
+  color: white;
+}
+
+.edit-product-form__btn--submit:hover {
+  background-color: #388e3c;
+}
+
+.edit-product-form__btn--cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.edit-product-form__btn--cancel:hover {
+  background-color: #bdbdbd;
+}

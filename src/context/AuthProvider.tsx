@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const user = await refreshUser(token);
 
-      if (user?.role === "admin") navigate("/dashboard");
+      if (user?.role === "admin") navigate("/admin/users");
       else if (user?.role === "user") navigate("/profile/orders");
     } catch {
       throw new Error("Login failed");
