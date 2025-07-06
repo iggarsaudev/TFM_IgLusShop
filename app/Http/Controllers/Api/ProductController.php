@@ -34,7 +34,7 @@ class ProductController extends Controller
      *         ) 
      *     ),
      * )
-    */
+     */
     public function index()
     {
         return Product::where('has_discount', false)->get();
@@ -242,6 +242,32 @@ class ProductController extends Controller
             'message' => 'Product successfully updated',
             'product' => $product,
         ], 200);
+    }
+
+    public function updateImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $product->image = asset('storage/' . $path);
+            $product->save();
+
+            return response()->json(['message' => 'Image updated']);
+        }
+
+        return response()->json(['error' => 'No image provided'], 422);
+    }
+
+    public function getFullProduct(string $id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        return response()->json($product, 200);
     }
 
     /** 
