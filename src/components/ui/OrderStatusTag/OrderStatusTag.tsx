@@ -12,7 +12,7 @@ const statusMap = {
   cancelled: { label: "Cancelled", icon: "❌", color: "#e76f51" },
 };
 
-export default function OrderStatusTag({ status }: Props) {
+const OrderStatusTag = ({ status }: Props) => {
   const { label, icon, color } = statusMap[status];
 
   return (
@@ -22,3 +22,4 @@ export default function OrderStatusTag({ status }: Props) {
     </span>
   );
 }
+export default OrderStatusTag;

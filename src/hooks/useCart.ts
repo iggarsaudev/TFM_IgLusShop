@@ -4,10 +4,12 @@ import { useContext } from "react";
 
 
 
-export default function useCart():CartContextType {
+const useCart = ():CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error("useCart debe usarse dentro de un CartProvider");
   }
   return context;
 }
+
+export default useCart;

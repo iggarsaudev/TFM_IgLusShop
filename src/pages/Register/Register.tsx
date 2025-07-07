@@ -22,7 +22,7 @@ async function register(datos: UserRegister) {
   }
 }
 
-export default function Register() {
+const Register = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -104,3 +104,4 @@ export default function Register() {
     </ContainerForm>
   );
 }
+export default Register;

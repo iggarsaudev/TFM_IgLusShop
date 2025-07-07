@@ -13,7 +13,7 @@ interface Order {
   created_at: string;
 }
 
-export default function Orders() {
+const Orders = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -26,7 +26,7 @@ export default function Orders() {
       try {
         const { data } = await api.get<Order[]>("/api/orders");
         setOrders(data);
-      } catch (err) {
+      } catch {
         setError("Error loading orders");
       } finally {
         setLoading(false);
@@ -79,3 +79,4 @@ export default function Orders() {
     </div>
   );
 }
+export default Orders;

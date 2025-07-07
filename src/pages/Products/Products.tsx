@@ -1,4 +1,4 @@
-import { ProductCard } from "../../components/common/ProductCard/ProductCard"
+import ProductCard  from "../../components/common/ProductCard/ProductCard"
 import NavBarCategories from "../../components/common/NavBarCategories/NavBarCategories.tsx"
 import { useSearchParams } from "react-router";
 import { useProducts } from "../../services/productService.ts"

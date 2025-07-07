@@ -6,7 +6,7 @@ interface Props {
   onChange: (file: File) => void;
 }
 
-export default function ProfileAvatar({ avatarUrl, onChange }: Props) {
+const ProfileAvatar = ({ avatarUrl, onChange }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -37,3 +37,5 @@ export default function ProfileAvatar({ avatarUrl, onChange }: Props) {
     </div>
   );
 }
+
+export default ProfileAvatar;

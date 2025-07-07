@@ -10,7 +10,7 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-export default function Button({
+const Button = ({
   text,
   className = "button_submit",
   disabled = false,
@@ -18,7 +18,7 @@ export default function Button({
   submittingText = "Saving...",
   type = "submit",
   onClick,
-}: ButtonProps) {
+}: ButtonProps) => {
   return (
     <button
       className={className}
@@ -30,3 +30,4 @@ export default function Button({
     </button>
   );
 }
+export default Button;

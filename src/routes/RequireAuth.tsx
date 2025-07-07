@@ -5,10 +5,11 @@ interface RequireAuthProps {
   allowedRoles: string[];
 }
 
-export default function RequireAuth({ allowedRoles }: RequireAuthProps) {
+const RequireAuth = ({ allowedRoles }: RequireAuthProps) => {
   const { isAuthenticated, user } = useAuth();
 
   const isAllowed = isAuthenticated && user && allowedRoles.includes(user.role);
 
   return isAllowed ? <Outlet /> : <Navigate to="/login" replace />;
 }
+export default RequireAuth;

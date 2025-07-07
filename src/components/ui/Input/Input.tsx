@@ -14,7 +14,7 @@ type InputProps = {
   placeholder?: string;
 };
 
-export default function Input({
+const Input = ({
   label,
   type,
   name,
@@ -22,7 +22,7 @@ export default function Input({
   onChange,
   required = false,
   placeholder = "",
-}: InputProps) {
+}: InputProps) => {
   return (
     <label className="form__label">
       {label}
@@ -38,3 +38,5 @@ export default function Input({
     </label>
   );
 }
+
+export default Input;

@@ -4,8 +4,8 @@ import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
 import "./publicUserLayout.css";
 
-export default function PublicUserLayout() {
-  const { totalItems } = useCart();
+const PublicUserLayout = () => {
+  const { totalItems } = useCart();  
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
   const location = useLocation();
@@ -99,7 +99,7 @@ export default function PublicUserLayout() {
           </>
         )}
 
-        <section className="main-layout__content p-4">
+        <section className="main-layout__content">
           <Outlet />
         </section>
       </main>
@@ -124,3 +124,4 @@ export default function PublicUserLayout() {
     </div>
   );
 }
+export default PublicUserLayout;
