@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from "react-router";
-import { ProductCard } from "../../components/common/ProductCard/ProductCard"
+import ProductCard from "../../components/common/ProductCard/ProductCard"
 import NavBarCategories from "../../components/common/NavBarCategories/NavBarCategories.tsx"
 import Spinner from "../../components/ui/Spinner/Spinner.tsx";
 import api from "../../services/api";
@@ -19,7 +19,7 @@ async function getOutlet():Promise<AxiosResponse<ProductType[]>> {
   }
 }
 
-export default function Outlet() {
+const Outlet = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,3 +53,4 @@ export default function Outlet() {
                 }
         </div>);
 };
+export default Outlet;

@@ -6,7 +6,9 @@ import Button from "../components/ui/Button/Button";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
-export default function PrivateLayout() {
+
+const PrivateLayout = () => {
+  const { logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isRenewing, setIsRenewing] = useState(false);
   const { logout, canRenew, setCanRenew } = useAuth();
@@ -119,3 +121,4 @@ export default function PrivateLayout() {
     </div>
   );
 }
+export default PrivateLayout

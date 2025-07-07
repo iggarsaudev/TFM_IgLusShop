@@ -23,7 +23,7 @@ import EditUsers from "../pages/Administrator/Users/EditUsers";
 import EditProductForm from "../pages/Administrator/Products/EditProductForm";
 import CreateProducts from "../pages/Administrator/Products/CreateProducts";
 
-export default function AppRouter() {
+const AppRouter = () => {
   return (
     <Routes>
       {/* Rutas públicas o de usuario logado con layout combinado */}
@@ -70,3 +70,4 @@ export default function AppRouter() {
     </Routes>
   );
 }
+export default AppRouter;

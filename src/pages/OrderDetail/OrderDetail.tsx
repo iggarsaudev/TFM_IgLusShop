@@ -20,7 +20,7 @@ interface Order {
   }[];
 }
 
-export default function OrderDetail() {
+const OrderDetail = () => {
   const { id } = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function OrderDetail() {
       try {
         const { data } = await api.get(`/api/orders/${id}`);
         setOrder(data);
-      } catch (err) {
+      } catch {
         setError("Unable to load order");
       } finally {
         setLoading(false);
@@ -116,3 +116,4 @@ export default function OrderDetail() {
     </section>
   );
 }
+export default OrderDetail;

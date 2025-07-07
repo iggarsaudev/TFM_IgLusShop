@@ -17,7 +17,7 @@ async function getCategories() {
     throw error;
   }
 }
-export default function NavBarCategories({section }:NavBarCategoriesProps) {
+const NavBarCategories = ({section }:NavBarCategoriesProps) => {
   const [categories, setCategories] = useState<ProductType[]>([]);
    useEffect(() => {
         const fetchData = async () => {
@@ -47,3 +47,4 @@ export default function NavBarCategories({section }:NavBarCategoriesProps) {
         </ul>
       </nav>);
 };
+export default NavBarCategories;

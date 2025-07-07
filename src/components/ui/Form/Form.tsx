@@ -6,10 +6,11 @@ type FormProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export default function Form({ children, onSubmit }: FormProps) {
+const Form = ({ children, onSubmit }: FormProps) => {
   return (
     <form className="form" onSubmit={onSubmit}>
       {children}
     </form>
   );
 }
+export default Form

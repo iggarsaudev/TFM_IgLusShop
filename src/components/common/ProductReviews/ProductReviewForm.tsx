@@ -10,10 +10,10 @@ interface Props {
   onReviewSubmitted?: () => void;
 }
 
-export default function ProductReviewForm({
+const ProductReviewForm = ({
   productId,
   onReviewSubmitted,
-}: Props) {
+}: Props) => {
   const { user } = useAuth();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -91,3 +91,5 @@ export default function ProductReviewForm({
     </form>
   );
 }
+
+export default ProductReviewForm;

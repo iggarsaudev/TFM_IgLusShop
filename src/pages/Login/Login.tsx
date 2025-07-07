@@ -10,7 +10,7 @@ import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import toast from "react-hot-toast";
 
-export default function Login() {
+const Login = () => {
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -67,3 +67,4 @@ export default function Login() {
     </ContainerForm>
   );
 }
+export default Login;

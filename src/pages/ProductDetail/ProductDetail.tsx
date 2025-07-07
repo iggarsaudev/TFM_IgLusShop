@@ -3,13 +3,13 @@ import { useProduct,useOutletProduct } from "../../services/productService.ts";
 import toast from "react-hot-toast";
 import Spinner from "../../components/ui/Spinner/Spinner.tsx";
 import { useParams } from "react-router-dom";
-import { ProductCard } from "../../components/common/ProductCard/ProductCard"
+import ProductCard from "../../components/common/ProductCard/ProductCard"
 import  "./productDetail.css";
 
 interface detailProps  {
   type : "product" | "outlet"
 }
-export default function ProductDetail({type}: detailProps) {
+const ProductDetail = ({type}: detailProps) => {
   const { id } = useParams()
   const numericId = Number(id);
   const product = useProduct(numericId);
@@ -40,3 +40,4 @@ export default function ProductDetail({type}: detailProps) {
     </>
   )
 }
+export default ProductDetail;
