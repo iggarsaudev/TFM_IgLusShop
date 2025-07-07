@@ -90,17 +90,26 @@ export default function OrderDetail() {
 
       <h2 className="order-detail__subtitle">Items</h2>
       <ul className="order-detail__item-list">
-        {order.detalles.map((item) => (
-          <li key={item.id} className="order-detail__item">
-            <p className="order-detail__item-description">
-              <strong>Product:</strong> {item.product.name}
-            </p>
-            <p className="order-detail__item-description">
-              <strong>Quantity:</strong> {item.quantity}
-            </p>
-            <p className="order-detail__item-description">
-              <strong>Unit Price:</strong> {item.unit_price} €
-            </p>
+        {order.detalles.map((detalle) => (
+          <li className="order-detail__item" key={detalle.product_id}>
+            <div className="order-detail__item-content">
+              <img
+                className="order-detail__item-image"
+                src={`${detalle.product.image}`}
+                alt={detalle.product.name}
+              />
+              <div className="order-detail__item-texts">
+                <p className="order-detail__item-description">
+                  <strong>{detalle.product.name}</strong>
+                </p>
+                <p className="order-detail__item-description">
+                  Cantidad: {detalle.quantity}
+                </p>
+                <p className="order-detail__item-description">
+                  Precio unitario: {detalle.unit_price} €
+                </p>
+              </div>
+            </div>
           </li>
         ))}
       </ul>

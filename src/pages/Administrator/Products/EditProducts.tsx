@@ -4,6 +4,7 @@ import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import "./editProducts.css";
+import SearchInput from "../../../components/ui/SearchInput/SearchInput";
 
 interface Product {
   id: number;
@@ -22,12 +23,16 @@ export default function EditProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   const renderDiscount = (product: Product) => {
     if (!product.has_discount || product.discount <= 0) return null;
     return (
       <p className="edit-products__discount">Descuento: {product.discount}%</p>
     );
   };
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const fetchProducts = async () => {
     try {
@@ -72,8 +77,13 @@ export default function EditProducts() {
   return (
     <section className="edit-products">
       <h2 className="edit-products__title">Product management</h2>
+      <SearchInput
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder="Search by product name"
+      />
       <div className="edit-products__grid">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div key={product.id} className="edit-products__card">
             <img
               src={product.image}

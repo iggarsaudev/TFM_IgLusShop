@@ -48,6 +48,27 @@
   color: #333;
 }
 
+.order-detail__item-content {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.order-detail__item-image {
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  border: 1px solid #ddd;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
+}
+
+.order-detail__item-texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .order-detail__loading,
 .order-detail__error {
   text-align: center;
