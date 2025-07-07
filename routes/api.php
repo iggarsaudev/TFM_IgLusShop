@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum', 'check.token.expiration'])->group(function ()
     // Pedidos del usuario
     Route::apiResource('orders', OrderController::class)->except(['update']);
 
-    // Ruta adicional para actualizar estado del pedido (opcional)
+    // Ruta adicional para actualizar estado del pedido
     Route::patch('orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
 

@@ -40,8 +40,8 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $orders = $user->role === 'admin'
-            ? Order::with('detalles')->get()
-            : Order::with('detalles')->where('user_id', $user->id)->get();
+            ? Order::with('detalles.product')->get()
+            : Order::with('detalles.product')->where('user_id', $user->id)->get();
 
         return response()->json($orders, 200);
     }
@@ -118,7 +118,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'message' => 'Order created successfully.',
-                'order' => $order->load('detalles'),
+                'order' => $order->load('detalles.product'),
             ], 201);
         });
     }
@@ -184,7 +184,7 @@ class OrderController extends Controller
      */
     public function updateStatus(UpdateOrderRequest $request, string $id)
     {
-        $order = Order::find($id);
+        $order = Order::with('detalles.product')->find($id);
 
         if (!$order) {
             throw new ResourceNotFoundException();
@@ -193,6 +193,17 @@ class OrderController extends Controller
         $user = $request->user();
         if (!$user->isAdmin() && $user->id !== $order->user_id) {
             return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        // Si se está cancelando, restaurar el stock
+        if ($request->status === 'cancelled' && $order->status !== 'cancelled') {
+            foreach ($order->detalles as $detalle) {
+                $product = $detalle->product;
+                if ($product) {
+                    $product->stock += $detalle->quantity;
+                    $product->save();
+                }
+            }
         }
 
         $order->update(['status' => $request->status]);

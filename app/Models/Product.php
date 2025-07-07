@@ -12,6 +12,10 @@ class Product extends Model
 
     protected $fillable = ['name', 'description', 'price', 'stock', 'image', 'has_discount', 'discount', 'provider_id', 'category_id'];
 
+    protected $casts = [
+        'has_discount' => 'boolean',
+    ];
+
     public function categoria()
     {
         return $this->belongsTo(Category::class);
