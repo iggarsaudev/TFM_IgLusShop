@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "./privateLayout.css";
-import Button from "../components/ui/Button/Button";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
-
 const PrivateLayout = () => {
-  const { logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isRenewing, setIsRenewing] = useState(false);
   const { logout, canRenew, setCanRenew } = useAuth();
@@ -120,5 +117,5 @@ const PrivateLayout = () => {
       </footer>
     </div>
   );
-}
-export default PrivateLayout
+};
+export default PrivateLayout;
