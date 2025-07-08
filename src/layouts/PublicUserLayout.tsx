@@ -5,7 +5,7 @@ import useCart from "../hooks/useCart";
 import "./publicUserLayout.css";
 
 const PublicUserLayout = () => {
-  const { totalItems } = useCart();  
+  const { totalItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
   const location = useLocation();
@@ -91,8 +91,17 @@ const PublicUserLayout = () => {
                 menuOpen ? "main-layout__sidebar--open" : ""
               }`}
             >
-              <NavLink to="/profile/orders">My Orders</NavLink>
-              <NavLink to="/profile" end>
+              <NavLink
+                to="/profile/orders"
+                className={`main-layout__sidebar__link`}
+              >
+                My Orders
+              </NavLink>
+              <NavLink
+                to="/profile"
+                end
+                className={`main-layout__sidebar__link`}
+              >
                 My Profile
               </NavLink>
             </aside>
@@ -123,5 +132,5 @@ const PublicUserLayout = () => {
       </footer>
     </div>
   );
-}
+};
 export default PublicUserLayout;

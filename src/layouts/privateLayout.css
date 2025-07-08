@@ -86,8 +86,8 @@
 
 /* Sidebar */
 .main-layout__sidebar {
-  width: 16rem;
-  background-color: #333;
+  width: 15rem;
+  background-color: #222;
   color: white;
   display: flex;
   flex-direction: column;
@@ -160,7 +160,7 @@
 @media (max-width: 768px) {
   .main-layout__sidebar {
     position: fixed;
-    top: 4rem;
+    top: 5.3rem;
     left: 0;
     height: calc(100vh - 4rem);
     transform: translateX(-100%);
