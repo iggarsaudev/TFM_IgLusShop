@@ -1,19 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
+import {
+  useCategories,
+  useProviders,
+  useCreateProduct,
+  useUploadProductImage,
+} from "../../../services/productService";
 import "./createProducts.css";
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Provider {
-  id: number;
-  name: string;
-}
 
 export default function CreateProduct() {
   const [form, setForm] = useState({
@@ -28,31 +23,23 @@ export default function CreateProduct() {
   });
 
   const [image, setImage] = useState<File | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [catRes, provRes] = await Promise.all([
-          api.get("/api/categories"),
-          api.get("/api/providers"),
-        ]);
-        setCategories(catRes.data);
-        setProviders(provRes.data);
-      } catch {
-        toast.error("Failed to load categories or providers");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    data: categories,
+    isLoading: loadingCategories,
+    isError: errorCategories,
+  } = useCategories();
 
-    fetchData();
-  }, []);
+  const {
+    data: providers,
+    isLoading: loadingProviders,
+    isError: errorProviders,
+  } = useProviders();
+
+  const { mutateAsync: createProduct, isPending: isCreating } =
+    useCreateProduct();
+  const { mutateAsync: uploadImage } = useUploadProductImage();
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value, type, checked } = e.target;
@@ -74,28 +61,14 @@ export default function CreateProduct() {
       return;
     }
 
-    setSubmitting(true);
-
     try {
-      // Creamos el payload: solo añadimos `discount` si aplica
-      const payload: any = {
-        ...form,
-      };
+      const { discount, ...rest } = form;
+      const payload = form.has_discount ? { ...rest, discount } : rest;
 
-      if (!form.has_discount) {
-        delete payload.discount;
-      }
-
-      const { data } = await api.post("/api/products", payload);
+      const { data } = await createProduct(payload as any);
 
       if (image) {
-        const imageData = new FormData();
-        imageData.append("image", image);
-        await api.post(`/api/products/${data.id}/image`, imageData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await uploadImage({ id: data.id, image });
       }
 
       toast.success("Product created successfully!");
@@ -108,12 +81,14 @@ export default function CreateProduct() {
       } else {
         toast.error("Error creating product");
       }
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  if (loading) return <Spinner />;
+  if (loadingCategories || loadingProviders) return <Spinner />;
+  if (errorCategories || errorProviders) {
+    toast.error("Failed to load categories or providers");
+    return null;
+  }
 
   return (
     <section className="create-product">
@@ -198,7 +173,7 @@ export default function CreateProduct() {
             required
           >
             <option value="">Select category</option>
-            {categories.map((c) => (
+            {categories?.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
@@ -215,7 +190,7 @@ export default function CreateProduct() {
             required
           >
             <option value="">Select provider</option>
-            {providers.map((p) => (
+            {providers?.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
@@ -239,9 +214,9 @@ export default function CreateProduct() {
         <button
           type="submit"
           className="create-product__btn"
-          disabled={submitting}
+          disabled={isCreating}
         >
-          {submitting ? "Creating..." : "Create Product"}
+          {isCreating ? "Creating..." : "Create Product"}
         </button>
       </form>
     </section>

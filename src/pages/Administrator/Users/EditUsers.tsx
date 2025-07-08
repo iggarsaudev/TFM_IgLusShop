@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import SearchInput from "../../../components/ui/SearchInput/SearchInput";
+import usersService from "../../../services/userService";
+import type { User } from "../../../types/authTypes";
 import "./editUsers.css";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: "user" | "admin";
-}
 
 export default function EditUsers() {
   const [users, setUsers] = useState<User[]>([]);
@@ -20,8 +14,8 @@ export default function EditUsers() {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await api.get("/api/users");
-      setUsers(data);
+      const users = await usersService.getAllUsers();
+      setUsers(users);
     } catch {
       toast.error("Error loading users");
     } finally {
@@ -32,7 +26,7 @@ export default function EditUsers() {
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
-      await api.delete(`/api/users/${id}`);
+      await usersService.deleteUser(id);
       setUsers((prev) => prev.filter((u) => u.id !== id));
       toast.success("User deleted");
     } catch {
@@ -42,7 +36,7 @@ export default function EditUsers() {
 
   const handleRoleChange = async (id: number, newRole: "user" | "admin") => {
     try {
-      await api.put(`/api/users/${id}`, { role: newRole });
+      await usersService.updateUserRole(id, newRole);
       setUsers((prev) =>
         prev.map((u) => (u.id === id ? { ...u, role: newRole } : u))
       );

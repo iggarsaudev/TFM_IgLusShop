@@ -1,78 +1,77 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
-import "./editProducts.css";
 import SearchInput from "../../../components/ui/SearchInput/SearchInput";
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  image: string;
-  has_discount: boolean;
-  discount: number;
-  category_id: number;
-  provider_id: number;
-}
+import {
+  useProducts,
+  useOutlet,
+  useDeleteProductGeneral,
+} from "../../../services/productService";
+import "./editProducts.css";
+import type { ProductType } from "../../../types/productTypes";
 
 export default function EditProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const {
+    data: products = [],
+    isPending: loadingProducts,
+    error: errorProducts,
+  } = useProducts();
+  const {
+    data: outlet = [],
+    isPending: loadingOutlet,
+    error: errorOutlet,
+  } = useOutlet();
+  const deleteProductMutation = useDeleteProductGeneral();
+
   const [searchTerm, setSearchTerm] = useState("");
-  const renderDiscount = (product: Product) => {
+  const [combinedProducts, setCombinedProducts] = useState<typeof products>([]);
+
+  useEffect(() => {
+    const productsWithFlag = products.map((p) => ({ ...p, isOutlet: false }));
+    const outletWithFlag = outlet.map((p) => ({ ...p, isOutlet: true }));
+    setCombinedProducts([...productsWithFlag, ...outletWithFlag]);
+  }, [products, outlet]);
+
+  useEffect(() => {
+    if (errorProducts || errorOutlet) {
+      toast.error("Error loading products");
+    }
+  }, [errorProducts, errorOutlet]);
+
+  const filteredProducts = combinedProducts.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const renderDiscount = (product: (typeof combinedProducts)[number]) => {
     if (!product.has_discount || product.discount <= 0) return null;
     return (
       <p className="edit-products__discount">Descuento: {product.discount}%</p>
     );
   };
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
-  const fetchProducts = async () => {
-    try {
-      // Hacemos las dos llamadas paralelas
-      const [noDiscountRes, discountRes] = await Promise.all([
-        api.get("/api/products"), // productos sin descuento
-        api.get("/api/outlet"), // productos con descuento
-      ]);
-
-      // Combinamos los arrays
-      const combinedProducts = [...noDiscountRes.data, ...discountRes.data];
-
-      setProducts(combinedProducts);
-    } catch (err) {
-      toast.error("Error loading products");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: number) => {
+  const handleDelete = (product: ProductType) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
-    try {
-      await api.delete(`/api/products/${id}`);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      toast.success("Product removed");
-    } catch {
-      toast.error("Error deleting product");
-    }
+
+    deleteProductMutation.mutate(
+      {
+        id: product.id,
+        isOutlet: product.isOutlet ?? false,
+      },
+      {
+        onSuccess: () => toast.success("Product removed"),
+        onError: () => toast.error("Error deleting product"),
+      }
+    );
   };
 
   const handleEdit = (productId: number) => {
     navigate(`/admin/products/edit/${productId}`);
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  if (loading) return <Spinner />;
+  if (loadingProducts || loadingOutlet) return <Spinner />;
 
   return (
     <section className="edit-products">
@@ -92,6 +91,7 @@ export default function EditProducts() {
             />
             <h3 className="edit-products__name">{product.name}</h3>
             <p className="edit-products__description">{product.description}</p>
+            <p className="edit-products__description">Stock: {product.stock}</p>
             <p className="edit-products__price">{product.price} €</p>
             {renderDiscount(product)}
             <div className="edit-products__actions">
@@ -103,7 +103,8 @@ export default function EditProducts() {
               </button>
               <button
                 className="edit-products__btn edit-products__btn--delete"
-                onClick={() => handleDelete(product.id)}
+                onClick={() => handleDelete(product)}
+                disabled={deleteProductMutation.isPending}
               >
                 Delete
               </button>

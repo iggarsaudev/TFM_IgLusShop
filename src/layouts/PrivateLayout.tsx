@@ -41,10 +41,10 @@ const PrivateLayout = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("token_expires_at", data.expires_at);
-      toast.success("Token renewed successfully");
+      toast.success("Session renewed successfully");
       setCanRenew(false);
     } catch {
-      toast.error("Error renewing token");
+      toast.error("Error renewing session");
     } finally {
       setIsRenewing(false);
     }
@@ -97,7 +97,7 @@ const PrivateLayout = () => {
               className="sidebar__btn"
               disabled={!canRenew || isRenewing}
             >
-              {isRenewing ? "Renewing..." : "Renew Token"}
+              {isRenewing ? "Renewing..." : "Renew Session"}
             </button>
           </div>
         </aside>
