@@ -244,6 +244,59 @@ class ProductController extends Controller
         ], 200);
     }
 
+    /**
+     * Updates the image of a product.
+     * 
+     * Requires authentication and administrator permissions.
+     * Accepts a multipart/form-data request containing a file named 'image'.
+     * 
+     * @OA\Post(
+     *     path="/api/products/{id}/image",
+     *     summary="Update the image of a product",
+     *     tags={"Products"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product to update image",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"image"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Image file to upload"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Image updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Image updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="No image provided",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="No image provided")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
     public function updateImage(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -259,6 +312,36 @@ class ProductController extends Controller
         return response()->json(['error' => 'No image provided'], 422);
     }
 
+    /**
+     * Retrieves full information about a product, including discount info.
+     * 
+     * This is a public endpoint and returns a product whether or not it has a discount.
+     * 
+     * @OA\Get(
+     *     path="/api/products/{id}/full",
+     *     summary="Get full product info (including outlet products)",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Full product information",
+     *         @OA\JsonContent(ref="#/components/schemas/Product")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product not found")
+     *         )
+     *     )
+     * )
+     */
     public function getFullProduct(string $id)
     {
         $product = Product::find($id);
@@ -316,21 +399,13 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if (!$product) {
-            return response()->json(
-                ['message' => 'Product not found'],
-                404
-            );
+            return response()->json(['message' => 'Product not found'], 404);
         }
         if ($product->has_discount) {
-            return response()->json(
-                ['message' => 'This product is from the outlet.'],
-                404
-            );
+            // No permite borrar productos del outlet aquí
+            return response()->json(['message' => 'This product is from the outlet.'], 404);
         }
         $product->delete();
-        return response()->json(
-            ['message' => 'Product successfully deleted'],
-            200
-        );
+        return response()->json(['message' => 'Product successfully deleted'], 200);
     }
 }

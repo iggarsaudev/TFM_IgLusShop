@@ -209,22 +209,13 @@ class OutletController extends Controller
     {
         $product = Product::find($id);
         if (!$product) {
-            return response()->json(
-                ['message' => 'Product not found'],
-                404
-            );
+            return response()->json(['message' => 'Product not found'], 404);
         }
-        if (!($product->has_discount)) {
-            // Este endpoint solo debe eliminar productos del oultet
-            return response()->json(
-                ['message' => 'This product is not from the outlet.'],
-                404
-            );
+        if (!$product->has_discount) {
+            // Este endpoint solo debe eliminar productos del outlet
+            return response()->json(['message' => 'This product is not from the outlet.'], 404);
         }
         $product->delete();
-        return response()->json(
-            ['message' => 'Product successfully deleted'],
-            200
-        );
+        return response()->json(['message' => 'Product successfully deleted'], 200);
     }
 }
