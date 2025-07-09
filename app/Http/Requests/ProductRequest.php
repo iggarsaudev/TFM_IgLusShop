@@ -27,8 +27,8 @@ class ProductRequest extends FormRequest
             'price' => 'required|decimal:0,2',
             'stock' => 'integer',
             'image' => 'url',
-            'has_discount' => 'declined',
-            'discount' => 'numeric|size:0',
+            'has_discount' => 'required|boolean',
+            'discount' => 'nullable|required_if:has_discount,true|integer|min:1|max:100',
             'category_id' => 'required|integer|exists:categories,id',
             'provider_id' => 'required|integer|exists:providers,id'
         ];
@@ -47,9 +47,10 @@ class ProductRequest extends FormRequest
             'price.decimal' => 'The price must be a valid decimal with up to 2 decimal places.',
             'stock.integer' => 'The stock must be an integer.',
             'image.url' => 'The image must be a valid URL.',
-            'has_discount.declined' => 'The has_discount field must be false or "off".',
+            'discount.required_if' => 'If the product has a discount, you must provide a discount value between 1 and 100.',
+            'discount.min' => 'The discount must be at least 1%.',
+            'discount.max' => 'The discount may not be greater than 100%.',
             'discount.numeric' => 'The discount must be a number.',
-            'discount.size' => 'The discount must be exactly 0.',
             'category_id.required' => 'The category ID is required.',
             'category_id.integer' => 'The category ID must be an integer.',
             'category_id.exists' => 'The selected category does not exist.',
