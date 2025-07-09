@@ -1,27 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../services/api";
+import { getOrderById, updateOrderStatus } from "../../services/orderService";
+import type { Order } from "../../services/orderService";
 import OrderStatusBar from "../../components/ui/OrderStatusBar/OrderStatusBar";
 import Spinner from "../../components/ui/Spinner/Spinner";
 import "./orderDetail.css";
 
-interface Order {
-  id: number;
-  status: string;
-  total: number;
-  created_at: string;
-  detalles: {
-    id: number;
-    quantity: number;
-    unit_price: number;
-    product: {
-      name: string;
-    };
-  }[];
-}
-
 const OrderDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -29,15 +15,19 @@ const OrderDetail = () => {
 
   useEffect(() => {
     const fetchOrder = async () => {
+      setLoading(true);
+      setError("");
       try {
-        const { data } = await api.get(`/api/orders/${id}`);
-        setOrder(data);
+        if (!id) throw new Error("Invalid order ID");
+        const orderData = await getOrderById(id);
+        setOrder(orderData);
       } catch {
         setError("Unable to load order");
       } finally {
         setLoading(false);
       }
     };
+
     fetchOrder();
   }, [id]);
 
@@ -45,10 +35,9 @@ const OrderDetail = () => {
     if (!order) return;
 
     setCanceling(true);
+    setError("");
     try {
-      await api.patch(`/api/orders/${order.id}/status`, {
-        status: "cancelled",
-      });
+      await updateOrderStatus(order.id, "cancelled");
       setOrder({ ...order, status: "cancelled" });
     } catch {
       setError("Unable to cancel order");
@@ -64,7 +53,7 @@ const OrderDetail = () => {
   return (
     <section className="order-detail">
       <h1 className="order-detail__title">Order #{order.id}</h1>
-      <OrderStatusBar status={order.status as any} />
+      <OrderStatusBar status={order.status} />
       <p className="order-detail__date">
         <strong>Date:</strong> {new Date(order.created_at).toLocaleDateString()}
       </p>
@@ -90,21 +79,33 @@ const OrderDetail = () => {
 
       <h2 className="order-detail__subtitle">Items</h2>
       <ul className="order-detail__item-list">
-        {order.detalles.map((item) => (
-          <li key={item.id} className="order-detail__item">
-            <p className="order-detail__item-description">
-              <strong>Product:</strong> {item.product.name}
-            </p>
-            <p className="order-detail__item-description">
-              <strong>Quantity:</strong> {item.quantity}
-            </p>
-            <p className="order-detail__item-description">
-              <strong>Unit Price:</strong> {item.unit_price} €
-            </p>
+        {order.detalles.map((detalle) => (
+          <li className="order-detail__item" key={detalle.id}>
+            <div className="order-detail__item-content">
+              {detalle.product.image && (
+                <img
+                  className="order-detail__item-image"
+                  src={detalle.product.image}
+                  alt={detalle.product.name}
+                />
+              )}
+              <div className="order-detail__item-texts">
+                <p className="order-detail__item-description">
+                  <strong>{detalle.product.name}</strong>
+                </p>
+                <p className="order-detail__item-description">
+                  Cantidad: {detalle.quantity}
+                </p>
+                <p className="order-detail__item-description">
+                  Precio unitario: {detalle.unit_price} €
+                </p>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
     </section>
   );
-}
+};
+
 export default OrderDetail;

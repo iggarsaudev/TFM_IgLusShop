@@ -1,84 +1,56 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import ContainerForm from "../../../components/ui/ContainerForm/ContainerForm";
 import Form from "../../../components/ui/Form/Form";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
+import {
+  useCategories,
+  useProviders,
+  useUpdateProduct,
+  useUploadProductImage,
+  useFullProduct,
+} from "../../../services/productService";
 import "./editProductForm.css";
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  image: string;
-  has_discount: boolean;
-  discount: number;
-  category_id: number;
-  provider_id: number;
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Provider {
-  id: number;
-  name: string;
-}
-
 export default function EditProductForm() {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const { data: productData, isPending: loadingProduct } = useFullProduct(id);
+  const { data: categories, isPending: loadingCategories } = useCategories();
+  const { data: providers, isPending: loadingProviders } = useProviders();
+
+  const updateProduct = useUpdateProduct();
+  const uploadImage = useUploadProductImage();
+
+  const [product, setProduct] = useState(productData);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
+  // Sync productData with local state when fetched
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [prodRes, catRes, provRes] = await Promise.all([
-          api.get(`/api/products/full/${id}`),
-          api.get("/api/categories"),
-          api.get("/api/providers"),
-        ]);
-        const productData = prodRes.data;
-        setProduct({
-          ...productData,
-          has_discount: Boolean(productData.has_discount),
-          discount: Number(productData.discount),
-        });
-
-        setCategories(catRes.data);
-        setProviders(provRes.data);
-      } catch {
-        toast.error("Failed to load product data");
-      } finally {
-        setLoading(false);
-      }
+    if (productData) {
+      setProduct(productData);
     }
-
-    fetchData();
-  }, [id]);
+  }, [productData]);
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value, type, checked } = e.target;
-    const parsedValue =
-      type === "checkbox" ? checked : type === "number" ? Number(value) : value;
+    const { name, value, type } = e.target;
+
+    let parsedValue: string | number | boolean = value;
+
+    if (type === "checkbox" && e.target instanceof HTMLInputElement) {
+      parsedValue = e.target.checked;
+    } else if (type === "number") {
+      parsedValue = Number(value);
+    }
 
     if (product) {
       setProduct({ ...product, [name]: parsedValue });
@@ -90,15 +62,8 @@ export default function EditProductForm() {
     if (!file || !product) return;
 
     setIsUploadingImage(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
     try {
-      await api.post(`/api/products/${product.id}/image`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await uploadImage.mutateAsync({ id: product.id, image: file });
       toast.success("Image updated successfully");
       setSelectedImage(file);
     } catch {
@@ -112,30 +77,34 @@ export default function EditProductForm() {
     e.preventDefault();
     if (!product) return;
 
-    setSubmitting(true);
-
-    try {
-      await api.put(`/api/products/${product.id}`, {
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        stock: product.stock,
-        has_discount: product.has_discount,
-        discount: product.has_discount ? product.discount : 0,
-        category_id: product.category_id,
-        provider_id: product.provider_id,
-      });
-
-      toast.success("Product updated successfully");
-      navigate("/admin/products");
-    } catch {
-      toast.error("Failed to update product");
-    } finally {
-      setSubmitting(false);
-    }
+    updateProduct.mutate(
+      {
+        id: product.id,
+        product: {
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          stock: product.stock,
+          has_discount: product.has_discount,
+          discount: product.has_discount ? product.discount : 0,
+          category_id: product.category_id,
+          provider_id: product.provider_id,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.success("Product updated successfully");
+          navigate("/admin/products");
+        },
+        onError: () => {
+          toast.error("Failed to update product");
+        },
+      }
+    );
   };
 
-  if (loading || !product) return <Spinner />;
+  if (loadingProduct || loadingCategories || loadingProviders || !product)
+    return <Spinner />;
 
   return (
     <ContainerForm title="Edit Product">
@@ -205,7 +174,7 @@ export default function EditProductForm() {
             required
           >
             <option value="">Select category</option>
-            {categories.map((c) => (
+            {categories?.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
@@ -221,7 +190,7 @@ export default function EditProductForm() {
             required
           >
             <option value="">Select provider</option>
-            {providers.map((p) => (
+            {providers?.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
@@ -246,8 +215,10 @@ export default function EditProductForm() {
         </label>
 
         <Button
-          text={submitting ? "Saving..." : "Save"}
-          disabled={submitting || isUploadingImage}
+          text={
+            updateProduct.isPending || isUploadingImage ? "Saving..." : "Save"
+          }
+          disabled={updateProduct.isPending || isUploadingImage}
         />
       </Form>
     </ContainerForm>

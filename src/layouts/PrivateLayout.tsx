@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "./privateLayout.css";
-import Button from "../components/ui/Button/Button";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
-
 const PrivateLayout = () => {
-  const { logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isRenewing, setIsRenewing] = useState(false);
   const { logout, canRenew, setCanRenew } = useAuth();
@@ -44,10 +41,10 @@ const PrivateLayout = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("token_expires_at", data.expires_at);
-      toast.success("Token renewed successfully");
+      toast.success("Session renewed successfully");
       setCanRenew(false);
     } catch {
-      toast.error("Error renewing token");
+      toast.error("Error renewing session");
     } finally {
       setIsRenewing(false);
     }
@@ -100,7 +97,7 @@ const PrivateLayout = () => {
               className="sidebar__btn"
               disabled={!canRenew || isRenewing}
             >
-              {isRenewing ? "Renewing..." : "Renew Token"}
+              {isRenewing ? "Renewing..." : "Renew Session"}
             </button>
           </div>
         </aside>
@@ -120,5 +117,5 @@ const PrivateLayout = () => {
       </footer>
     </div>
   );
-}
-export default PrivateLayout
+};
+export default PrivateLayout;

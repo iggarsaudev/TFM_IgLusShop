@@ -1,9 +1,12 @@
 import { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import api from "../../../services/api";
 import toast from "react-hot-toast";
 import Spinner from "../../ui/Spinner/Spinner";
 import type { Review } from "../../../types/review";
+import {
+  useDeleteReview,
+  useUpdateReview,
+} from "../../../services/reviewService";
 import "./productReviewList.css";
 
 interface Props {
@@ -12,39 +15,30 @@ interface Props {
   onUpdate: () => void;
 }
 
-const ProductReviewList = ({
-  reviews,
-  onDelete,
-  onUpdate,
-}: Props) => {
+const ProductReviewList = ({ reviews, onDelete, onUpdate }: Props) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [editedComment, setEditedComment] = useState("");
   const [editedRating, setEditedRating] = useState(0);
 
-  if (reviews.length === 0) {
-    return (
-      <div className="review-message">
-        <p className="review-message__text">There are no reviews yet.</p>
-      </div>
-    );
-  }
+  const { mutate: deleteReview, isPending: isDeleting } = useDeleteReview(
+    () => toast.success("Review deleted"),
+    () => toast.error("Error deleting review")
+  );
 
-  const handleDelete = async (id: number) => {
+  const { mutate: updateReview, isPending: isUpdating } = useUpdateReview(
+    () => {
+      toast.success("Review updated");
+      closeEditModal();
+      onUpdate();
+    },
+    () => toast.error("Error updating review")
+  );
+
+  const handleDelete = (id: number) => {
     if (!confirm("Are you sure you want to delete this review?")) return;
-
-    setLoading(true);
-
-    try {
-      await api.delete(`/api/reviews/${id}`);
-      toast.success("Review deleted");
-      onDelete(id);
-    } catch {
-      toast.error("Error deleting review");
-    } finally {
-      setLoading(false);
-    }
+    deleteReview(id);
+    onDelete(id); // sigue notificando al padre
   };
 
   const openEditModal = (review: Review) => {
@@ -59,20 +53,13 @@ const ProductReviewList = ({
     setEditedRating(0);
   };
 
-  const submitEdit = async () => {
+  const submitEdit = () => {
     if (!editingReview) return;
-
-    try {
-      await api.put(`/api/reviews/${editingReview.id}`, {
-        comment: editedComment.trim(),
-        rating: editedRating,
-      });
-      toast.success("Review updated");
-      closeEditModal();
-      onUpdate();
-    } catch {
-      toast.error("Error updating review");
-    }
+    updateReview({
+      id: editingReview.id,
+      comment: editedComment.trim(),
+      rating: editedRating,
+    });
   };
 
   const renderStars = (selected: number, onChange: (n: number) => void) => {
@@ -86,6 +73,14 @@ const ProductReviewList = ({
       </span>
     ));
   };
+
+  if (reviews.length === 0) {
+    return (
+      <div className="review-message">
+        <p className="review-message__text">There are no reviews yet.</p>
+      </div>
+    );
+  }
 
   return (
     <section className="reviews">
@@ -114,7 +109,7 @@ const ProductReviewList = ({
                 <button
                   className="reviews__btn reviews__btn--delete"
                   onClick={() => handleDelete(review.id)}
-                  disabled={loading}
+                  disabled={isDeleting}
                 >
                   Delete
                 </button>
@@ -124,7 +119,6 @@ const ProductReviewList = ({
         ))}
       </div>
 
-      {/* Modal de edición */}
       {editingReview && (
         <div className="modal">
           <div className="modal__content">
@@ -141,6 +135,7 @@ const ProductReviewList = ({
               <button
                 className="reviews__btn reviews__btn--save"
                 onClick={submitEdit}
+                disabled={isUpdating}
               >
                 Save
               </button>
@@ -154,13 +149,14 @@ const ProductReviewList = ({
           </div>
         </div>
       )}
-      {loading && (
+
+      {(isDeleting || isUpdating) && (
         <div className="loading-overlay">
           <Spinner />
         </div>
       )}
     </section>
   );
-}
+};
 
 export default ProductReviewList;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import api from "../../../services/api";
+import { useCreateReview } from "../../../services/reviewService";
 import toast from "react-hot-toast";
 import Button from "../../ui/Button/Button";
 import "./productReviewForm.css";
@@ -10,14 +10,22 @@ interface Props {
   onReviewSubmitted?: () => void;
 }
 
-const ProductReviewForm = ({
-  productId,
-  onReviewSubmitted,
-}: Props) => {
+const ProductReviewForm = ({ productId, onReviewSubmitted }: Props) => {
   const { user } = useAuth();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutate: createReview, isPending: isSubmitting } = useCreateReview(
+    () => {
+      toast.success("Review sent!");
+      setRating(0);
+      setComment("");
+      onReviewSubmitted?.();
+    },
+    () => {
+      toast.error("There was an error submitting your review.");
+    }
+  );
 
   if (!user) {
     return (
@@ -29,7 +37,7 @@ const ProductReviewForm = ({
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (rating === 0 || comment.trim() === "") {
@@ -37,24 +45,11 @@ const ProductReviewForm = ({
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      await api.post("/api/reviews", {
-        product_id: productId,
-        rating,
-        comment: comment.trim(),
-      });
-
-      toast.success("Review sent!");
-      setRating(0);
-      setComment("");
-      onReviewSubmitted?.();
-    } catch {
-      toast.error("There was an error submitting your review.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    createReview({
+      product_id: productId,
+      rating,
+      comment: comment.trim(),
+    });
   };
 
   const renderStars = () =>
@@ -90,6 +85,6 @@ const ProductReviewForm = ({
       />
     </form>
   );
-}
+};
 
 export default ProductReviewForm;

@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ProductType } from "../types/productTypes";
 import api from "./api";
- 
-
 
 // Obtener todos los productos
 export function useProducts() {
@@ -65,7 +63,13 @@ export function useCreateProduct() {
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, product }: { id: number; product: Partial<ProductType> }) => api.put(`/api/products/${id}`, product),
+    mutationFn: async ({
+      id,
+      product,
+    }: {
+      id: number;
+      product: Partial<ProductType>;
+    }) => api.put(`/api/products/${id}`, product),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
@@ -92,3 +96,48 @@ export const useCategories = () => {
     },
   });
 };
+
+export const useProviders = () => {
+  return useQuery<{ id: number; name: string }[]>({
+    queryKey: ["providers"],
+    queryFn: async () => {
+      const res = await api.get("/api/providers");
+      return res.data;
+    },
+  });
+};
+
+export function useUploadProductImage() {
+  return useMutation({
+    mutationFn: async ({ id, image }: { id: number; image: File }) => {
+      const formData = new FormData();
+      formData.append("image", image);
+      return api.post(`/api/products/${id}/image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+  });
+}
+
+export function useFullProduct(id: number | string) {
+  return useQuery<ProductType>({
+    queryKey: ["fullProduct", id],
+    queryFn: async () => {
+      const res = await api.get(`/api/products/full/${id}`);
+      return res.data;
+    },
+    enabled: !!id, // Solo hacer la llamada si hay id válido
+  });
+}
+
+export function useDeleteProductGeneral() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, isOutlet }: { id: number; isOutlet: boolean }) =>
+      api.delete(isOutlet ? `/api/outlet/${id}` : `/api/products/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["outlet"] });
+    },
+  });
+}

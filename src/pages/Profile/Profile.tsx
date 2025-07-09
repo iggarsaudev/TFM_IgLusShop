@@ -11,7 +11,7 @@ import Button from "../../components/ui/Button/Button";
 import Spinner from "../../components/ui/Spinner/Spinner";
 import "./profile.css";
 
-const Profile = ()  => {
+const Profile = () => {
   const { user, setUser, canRenew, setCanRenew } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
@@ -128,10 +128,10 @@ const Profile = ()  => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("token_expires_at", data.expires_at);
-      toast.success("Token renewed successfully");
+      toast.success("Session renewed successfully");
       setCanRenew(false);
     } catch (err) {
-      toast.error("Error renewing token");
+      toast.error("Error renewing session");
     } finally {
       setIsRenewing(false);
     }
@@ -192,7 +192,7 @@ const Profile = ()  => {
           disabled={!hasChanges || isSubmitting || isUploadingAvatar}
         />
         <Button
-          text={isRenewing ? "Renewing..." : "Renew Token"}
+          text={isRenewing ? "Renewing..." : "Renew Session"}
           disabled={!canRenew || isRenewing || isUploadingAvatar}
           onClick={handleRenewToken}
           className="button__renew"
@@ -200,5 +200,5 @@ const Profile = ()  => {
       </Form>
     </ContainerForm>
   );
-}
+};
 export default Profile;

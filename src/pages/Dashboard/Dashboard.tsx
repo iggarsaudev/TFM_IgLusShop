@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
-import api from "../../services/api";
+import userProfileService from "../../services/userProfileService";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import toast from "react-hot-toast";
 import ContainerForm from "../../components/ui/ContainerForm/ContainerForm";
@@ -12,14 +12,14 @@ import Spinner from "../../components/ui/Spinner/Spinner";
 import "./dashboard.css";
 
 export default function Dashboard() {
-  const { user, setUser, canRenew, setCanRenew } = useAuth();
+  const { user, setUser, canRenew, setCanRenew, refreshUser } = useAuth();
+
   const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { refreshUser } = useAuth();
   const [isRenewing, setIsRenewing] = useState(false);
-  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false); // estado para el spinner de avatar
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const hasChanges =
     name.trim() !== user?.name ||
@@ -55,7 +55,7 @@ export default function Dashboard() {
     }
 
     try {
-      await api.put("/api/user/profile", updateData);
+      await userProfileService.updateUserProfile(updateData);
       toast.success("Profile updated successfully");
       setPassword("");
       setPasswordConfirm("");
@@ -76,24 +76,17 @@ export default function Dashboard() {
   };
 
   const handleAvatarChange = async (file: File) => {
-    const formData = new FormData();
-    formData.append("avatar", file);
-
-    setIsUploadingAvatar(true); // activar spinner
+    setIsUploadingAvatar(true);
 
     try {
-      await api.post("/api/user/avatar", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await userProfileService.uploadUserAvatar(file);
       toast.success("Profile picture updated");
       await refreshUser();
     } catch (err) {
       toast.error("Error updating profile picture");
       console.error(err);
     } finally {
-      setIsUploadingAvatar(false); // desactivar spinner
+      setIsUploadingAvatar(false);
     }
   };
 
@@ -106,9 +99,8 @@ export default function Dashboard() {
       const now = Date.now();
       const timeLeftMs = expiresAt - now;
 
-      // se activa solo si quedan menos de 5 minutos
       setCanRenew(timeLeftMs > 0 && timeLeftMs <= 5 * 60 * 1000);
-    }, 30000); // se revisa cada 30 segundos
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [setCanRenew]);
@@ -116,15 +108,7 @@ export default function Dashboard() {
   const handleRenewToken = async () => {
     setIsRenewing(true);
     try {
-      const { data } = await api.post(
-        "/api/renew-token",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const data = await userProfileService.renewToken();
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("token_expires_at", data.expires_at);
@@ -192,6 +176,14 @@ export default function Dashboard() {
           disabled={!hasChanges || isSubmitting || isUploadingAvatar}
         />
       </Form>
+
+      {canRenew && (
+        <Button
+          text={isRenewing ? "Renewing token..." : "Renew Token"}
+          onClick={handleRenewToken}
+          disabled={isRenewing}
+        />
+      )}
     </ContainerForm>
   );
 }
