@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -28,7 +29,15 @@ class ProductRequest extends FormRequest
             'stock' => 'integer',
             'image' => 'url',
             'has_discount' => 'required|boolean',
-            'discount' => 'nullable|required_if:has_discount,true|integer|min:1|max:100',
+            'discount' => [
+            'required_if:has_discount,true',
+            'numeric',
+            'min:0',
+            Rule::when(
+                $this->input('has_discount') === false,
+                ['in:0'], // si no hay descuento, solo se permite 0
+                ['lt:100'] // si hay descuento, no puede ser 100 o más
+            ),],
             'category_id' => 'required|integer|exists:categories,id',
             'provider_id' => 'required|integer|exists:providers,id'
         ];

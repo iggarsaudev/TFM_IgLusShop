@@ -73,12 +73,6 @@ class OrderController extends Controller
         foreach ($request->items as $item) {
             $product = Product::find($item['product_id']);
 
-            if (!$product) {
-                return response()->json([
-                    'error' => "Some products do not exist"
-                ], 404);
-            }
-
             if ($product->stock < $item['quantity']) {
                 return response()->json([
                     'error' => "Not enough stock for the product",
