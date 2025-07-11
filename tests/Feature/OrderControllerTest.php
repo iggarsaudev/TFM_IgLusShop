@@ -17,6 +17,8 @@ use App\Models\OrderDetail;
 
 class OrderControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_user_can_create_order()
     {
         $user = User::factory()->create();
@@ -24,8 +26,9 @@ class OrderControllerTest extends TestCase
         $provider = Provider::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
-            'provider_id'=>$provider->id,
-            'stock' => 10]);
+            'provider_id' => $provider->id,
+            'stock' => 10
+        ]);
 
         $payload = [
             'items' => [
@@ -44,15 +47,16 @@ class OrderControllerTest extends TestCase
             'quantity' => 3
         ]);
     }
-        public function test_update_stock_after_create_order()
+    public function test_update_stock_after_create_order()
     {
         $user = User::factory()->create();
         $category = Category::factory()->create();
         $provider = Provider::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
-            'provider_id'=>$provider->id,
-            'stock' => 10]);
+            'provider_id' => $provider->id,
+            'stock' => 10
+        ]);
 
         $payload = [
             'items' => [
@@ -62,7 +66,7 @@ class OrderControllerTest extends TestCase
         $token = $user->createToken('api-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/orders', $payload);
-        $this->assertEquals(7, $product->fresh()->stock); 
+        $this->assertEquals(7, $product->fresh()->stock);
     }
 
     public function test_order_fails_if_product_does_not_exist()
@@ -87,8 +91,9 @@ class OrderControllerTest extends TestCase
         $provider = Provider::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
-            'provider_id'=>$provider->id,
-            'stock' => 1]);
+            'provider_id' => $provider->id,
+            'stock' => 1
+        ]);
 
         $payload = [
             'items' => [
@@ -101,17 +106,18 @@ class OrderControllerTest extends TestCase
             ->assertStatus(400)
             ->assertJsonFragment(['error' => 'Not enough stock for the product']);
     }
-        public function test_user_can_cancel_order()
+    public function test_user_can_cancel_order()
     {
         $user = User::factory()->create();
         $category = Category::factory()->create();
         $provider = Provider::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
-            'provider_id'=>$provider->id,
-            'stock' => 10]);
+            'provider_id' => $provider->id,
+            'stock' => 10
+        ]);
 
-       
+
         $order = Order::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
         OrderDetail::factory()->create([
             'order_id' => $order->id,
@@ -126,20 +132,21 @@ class OrderControllerTest extends TestCase
 
         $token = $user->createToken('api-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer ' . $token)
-             ->patchJson("/api/orders/{$order->id}/status", ['status' => 'cancelled'])
+            ->patchJson("/api/orders/{$order->id}/status", ['status' => 'cancelled'])
             ->assertStatus(200);
     }
-        public function test_update_stock_after_cancel_order()
+    public function test_update_stock_after_cancel_order()
     {
-         $user = User::factory()->create();
+        $user = User::factory()->create();
         $category = Category::factory()->create();
         $provider = Provider::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
-            'provider_id'=>$provider->id,
-            'stock' => 10]);
+            'provider_id' => $provider->id,
+            'stock' => 10
+        ]);
 
-       
+
         $order = Order::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
         OrderDetail::factory()->create([
             'order_id' => $order->id,
@@ -154,7 +161,7 @@ class OrderControllerTest extends TestCase
 
         $token = $user->createToken('api-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer ' . $token)
-             ->patchJson("/api/orders/{$order->id}/status", ['status' => 'cancelled']);
-        $this->assertEquals(10, $product->fresh()->stock); 
+            ->patchJson("/api/orders/{$order->id}/status", ['status' => 'cancelled']);
+        $this->assertEquals(10, $product->fresh()->stock);
     }
 }
