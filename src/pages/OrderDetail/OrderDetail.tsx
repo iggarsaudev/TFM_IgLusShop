@@ -6,6 +6,23 @@ import OrderStatusBar from "../../components/ui/OrderStatusBar/OrderStatusBar";
 import Spinner from "../../components/ui/Spinner/Spinner";
 import "./orderDetail.css";
 
+// --- Añadido para validar el status ---
+const validStatuses = [
+  "pending",
+  "cancelled",
+  "processing",
+  "sent",
+  "delivered",
+] as const;
+type Status = (typeof validStatuses)[number];
+
+function parseStatus(status: string): Status {
+  return validStatuses.includes(status as Status)
+    ? (status as Status)
+    : "pending";
+}
+// --------------------------------------
+
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
@@ -20,7 +37,12 @@ const OrderDetail = () => {
       try {
         if (!id) throw new Error("Invalid order ID");
         const orderData = await getOrderById(id);
-        setOrder(orderData);
+
+        // Validar el status antes de setOrder
+        setOrder({
+          ...orderData,
+          status: parseStatus(orderData.status),
+        });
       } catch {
         setError("Unable to load order");
       } finally {

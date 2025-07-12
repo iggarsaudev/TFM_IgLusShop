@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "NodeNext",
-    "noEmitOnError": false
+    "moduleResolution": "NodeNext"
   },
   "files": [],
   "references": [
