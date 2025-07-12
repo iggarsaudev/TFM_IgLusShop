@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 async function register(datos: UserRegister) {
   try {
     const response = await api.post("/api/register", datos);
-    return response.data.message;
+    return response.data;
   } catch (error) {
     console.error("Error while creating user:", error);
     throw error;
@@ -43,12 +43,15 @@ const Register = () => {
       };
       const response = await register(data);
       setMessage(response);
-      toast.success("Successful registration");
+      toast.success(response.message || "Successful registration");
       navigate("/login");
       setIsSubmitting(false);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const msg = error.response?.data?.message || "Form validation error";
+        const msg =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Form validation error";
         setError(msg);
         toast.error(msg);
       } else if (error instanceof Error) {
@@ -92,16 +95,15 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter password"
         />
-        {error && <p className="error">{error}</p>}
         {message && <p className="register__message">{message}</p>}
         <Button
-          text="Sign In"
-          submittingText="Sigging In..."
+          text="Register"
+          submittingText="Registering..."
           isSubmitting={isSubmitting}
           disabled={isSubmitting}
         />
       </Form>
     </ContainerForm>
   );
-}
+};
 export default Register;
