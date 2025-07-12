@@ -95,6 +95,7 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter password"
         />
+        {error && <p className="error">{error}</p>}
         {message && <p className="register__message">{message}</p>}
         <Button
           text="Register"
