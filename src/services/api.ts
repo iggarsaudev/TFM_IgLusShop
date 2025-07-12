@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  //baseURL: "http://localhost:8000", // ajusta si es necesario
-  baseURL: "https://iglusshop.rf.gd/api"
+  baseURL: "http://localhost:8000", // ajusta si es necesario
   withCredentials: false, // no usamos cookies ahora, sino token
 });
 
