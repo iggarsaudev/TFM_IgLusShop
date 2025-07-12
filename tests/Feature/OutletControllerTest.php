@@ -12,6 +12,8 @@ use App\Models\Provider;
 
 class OutletControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_fails_to_create_an_outlet_product_with_100_percent_discount(): void
     {
         $admin = User::factory()->create([
@@ -33,7 +35,7 @@ class OutletControllerTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                    ->postJson('/api/outlet', $payload);
+            ->postJson('/api/outlet', $payload);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['discount']);
@@ -59,7 +61,7 @@ class OutletControllerTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                    ->postJson('/api/outlet', $payload);
+            ->postJson('/api/outlet', $payload);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['discount']);
@@ -84,7 +86,7 @@ class OutletControllerTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                    ->postJson('/api/outlet', $payload);
+            ->postJson('/api/outlet', $payload);
 
         $response->assertStatus(422);
     }
