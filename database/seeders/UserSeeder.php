@@ -16,20 +16,20 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Ignacio',
-            'email' =>'ignacio.garcia@iglusshop.com',
+            'email' => 'ignacio.garcia@iglusshop.com',
             'password' => Hash::make('password'),
             'role' => 'admin'
         ]);
-        
+
         User::create([
             'name' => 'Lucia',
-            'email' =>'lucia.sanchez@iglusshop.com',
+            'email' => 'lucia.sanchez@iglusshop.com',
             'password' => Hash::make('password'),
             'role' => 'admin'
         ]);
         User::create([
             'name' => 'user_prueba',
-            'email' =>'user_prueba@user_prueba.com',
+            'email' => 'user_prueba@iglusshop.com',
             'password' => Hash::make('password'),
             'role' => 'user'
         ]);
