@@ -87,6 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product,detail }) => {
             <span className="product-card__quantity-number">{quantityInCart}</span>
             <button
                 onClick={handleAdd}
+                data-cy="add_product"
                 disabled={quantityInCart >= product.stock}
                 className="product-card__button"
             >

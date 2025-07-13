@@ -1,3 +1,4 @@
+import {useEffect} from "react"
 import { Link } from "react-router-dom"
 import { useProducts,useOutlet } from "../../services/productService.ts";
 import {useCreateOrder} from "../../services/orderService.ts";
@@ -27,6 +28,15 @@ const Cart = () => {
 
   const total = subtotal + tax
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Order created");
+    }
+    if (error) {
+      toast.error("Failed to create the order");
+    }
+  }, [isSuccess, error]);
+
   const handleCreateOrder = (event:React.FormEvent) => {
     event.preventDefault();
     const orderData = {
@@ -45,11 +55,11 @@ const Cart = () => {
     <h1 className="cart__title">Your shopping cart</h1>
 
     {cart.length === 0 ? (
-      <div className="cart__empty">
+      <div className="cart__empty"> 
         <svg xmlns="http://www.w3.org/2000/svg" className="cart__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 4 0z" />
         </svg>
-        <p className="cart__empty-text">Your cart is empty</p>
+        <p className="cart__empty-text" data-cy="empty-cart-message">Your cart is empty</p>
         <Link to="/products" className="cart__link">
           Go shopping
         </Link>
@@ -77,7 +87,7 @@ const Cart = () => {
                   const itemTotal = (product.has_discount ? parseFloat((product.price * (1 - product.discount / 100)).toFixed(2))* item.quantity : parseFloat(String(product.price)) * item.quantity)
 
                   return (
-                    <tr key={`${item.id}-${item.quantity}-${itemTotal}`}>
+                    <tr data-cy="cart-item" key={`${item.id}-${item.quantity}-${itemTotal}`}>
                       <td>
                         <div className="cart__product">
                           <img className="cart__product-image" src={product.image} alt={product.name} />
@@ -88,11 +98,12 @@ const Cart = () => {
                           </div>
                         </div>
                       </td>
-                      <td>${product.has_discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price}</td>
+                      <td data-cy="product-price">${product.has_discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price}</td>
                       <td>
                         <div className="cart__quantity">
                           <button onClick={() => updateQuantity(item, item.quantity - 1)}>-</button>
                           <input
+                            data-cy="product-quantity"
                             type="number"
                             min="1"
                             value={item.quantity}
@@ -118,24 +129,22 @@ const Cart = () => {
         </div>
 
         {/* Resumen del pedido */}
-        <div className="cart__summary">
+        <div className="cart__summary" data-cy="cart-summary">
           <h2 className="cart__summary-title">Order Summary</h2>
           <div className="cart__summary-item">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span data-cy="summary-subtotal">${subtotal.toFixed(2)}</span>
           </div>
           <div className="cart__summary-item">
             <span>IVA (21%)</span>
-            <span>${tax.toFixed(2)}</span>
+            <span data-cy="summary-tax">${tax.toFixed(2)}</span>
           </div>
           <div className="cart__summary-total">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span data-cy="summary-total">${total.toFixed(2)}</span>
           </div>
-          <form onSubmit={handleCreateOrder}>
+          <form onSubmit={handleCreateOrder} data-cy="checkout-form">
             <Button text="Complete Order" />
-            {isSuccess && toast.success("Order Create")}
-            {error && toast.error("Failed to create the order")}
           </form>
         </div>
       </div>
