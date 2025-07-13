@@ -1,0 +1,16 @@
+.order-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid;
+  border-radius: 1rem;
+  background-color: transparent;
+  white-space: nowrap;
+}
+
+.order-status-tag__icon {
+  font-size: 1rem;
+}

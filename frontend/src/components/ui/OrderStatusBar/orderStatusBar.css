@@ -1,0 +1,64 @@
+.order-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 2rem 0;
+  position: relative;
+  gap: 1rem;
+}
+
+.order-status__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  text-align: center;
+  color: #aaa;
+}
+
+.order-status__icon {
+  font-size: 2rem;
+  background-color: #ddd;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.order-status__label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.order-status__bar {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: 100%;
+  height: 0.3rem;
+  background-color: #ddd;
+  z-index: 1;
+}
+
+.order-status__step--complete .order-status__icon {
+  background-color: #2a9d8f;
+  color: white;
+}
+
+.order-status__step--current .order-status__icon {
+  background-color: #f4a261;
+  color: white;
+}
+
+.order-status__step--complete .order-status__bar {
+  background-color: #2a9d8f;
+}
+
+/* Evita que el paso actual pinte la barra hacia el siguiente */
+.order-status__step--current .order-status__bar {
+  background-color: #ddd;
+}

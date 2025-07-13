@@ -1,0 +1,44 @@
+/* Contenedor general */
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.detail-section {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .detail-container {
+    display: block;
+  }
+}
+
+/* Sección del producto (imagen + info) */
+.detail-section {
+  padding: 2rem;
+}
+
+/* Sección de reviews */
+.reviews-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Título */
+.detail-title {
+  text-align: center;
+  font-size: 2.2rem;
+  margin: 2rem auto 1rem;
+  color: #222;
+}

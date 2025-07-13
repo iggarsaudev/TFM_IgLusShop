@@ -1,0 +1,10 @@
+.login__link {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.login__link-register {
+  color: #f4a261;
+  text-decoration: none;
+  font-weight: bold;
+}

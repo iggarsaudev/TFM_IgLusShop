@@ -1,0 +1,46 @@
+.create-product {
+  padding: 2rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.create-product__title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.create-product__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.create-product__form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  gap: 0.5rem;
+}
+
+.create-product__btn {
+  align-self: flex-start;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.4rem;
+}
+
+.create-product__btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.create-product__preview {
+  max-width: 10rem;
+  height: auto;
+  border-radius: 0.4rem;
+  margin-top: 0.5rem;
+}

@@ -1,0 +1,52 @@
+.dashboard__card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 0.1rem solid #ddd;
+  background-color: #fff;
+  padding: 1.2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1rem 0.4rem rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  height: 100%;
+}
+
+.dashboard__card-link {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+.dashboard__card-link:hover,
+.dashboard__card-link:focus {
+  background-color: #f0f0f0;
+  outline: none;
+  cursor: pointer;
+  transform: translateY(-0.3rem);
+}
+
+.dashboard__card-link--active {
+  border: 0.2rem solid #007bff;
+  background-color: #e7f1ff;
+}
+
+.dashboard__card-title {
+  font-size: 1.25rem;
+  margin: 0;
+}
