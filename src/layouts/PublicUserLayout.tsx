@@ -61,7 +61,7 @@ const PublicUserLayout = () => {
             </NavLink>
           )}
 
-          <NavLink to="/cart" className="header__cart-btn">
+          <NavLink to="/cart" className="header__cart-btn" data-cy="cart-link">
             <span className="material-symbols-outlined">shopping_cart</span>
             {totalItems != 0 ? (
               <span className="cart__count">{totalItems} </span>
