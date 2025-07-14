@@ -1,54 +1,99 @@
-# React + TypeScript + Vite
+# 🛒 Frontend - IgLu’s Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Resumen
 
-Currently, two official plugins are available:
+Este proyecto representa el frontend de la aplicación Full Stack desarrollada como parte del Trabajo Final de Máster. Se trata de una tienda online funcional implementada como una **SPA (Single Page Application)** usando **React**. Esta interfaz consume los endpoints ofrecidos por el backend en Laravel y permite a los usuarios navegar, registrarse, iniciar sesión, gestionar productos (según su rol), y realizar compras.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este frontend está diseñado para funcionar con el backend desarrollado en Laravel disponible en http://127.0.0.1:8000.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📖 Descripción
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+La aplicación incluye funcionalidades como:
+
+- Registro e inicio de sesión mediante tokens proporcionados por el backend (Laravel Sanctum).
+- Gestión de productos por parte de administradores (crear, editar, borrar).
+- Visualización de productos y compras por parte de los usuarios.
+- Edición del perfil de usuario.
+- Protección de rutas mediante control de roles (`admin`, `user`).
+- Experiencia interactiva de usuario gracias a React Router y manejo de estado.
+- Tests de extremo a extremo con Cypress.
+
+---
+
+## 🧰 Tecnologías utilizadas
+
+- **Framework:** React  
+- **Routing:** React Router  
+- **Testing E2E:** Cypress  
+- **Estilos:** CSS con metodología BEM  
+- **Consumo de API:** fetch / axios  
+
+---
+
+## ⚙️ Configuración e instalación
+
+### 1. Clona el repositorio
+
+```bash
+git clone <URL-del-repositorio>
+cd frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Instala las dependencias
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+### 3. Levantar el servidor de desarrollo (http://localhost:5173)
+
+```bash
+npm run dev
+```
+
+--- 
+
+## ✅ Testing con Cypress
+
+### Opciones de ejecución
+
+1. Ejecutar pruebas directamente
+   
+```bash
+npx cypress run
+```
+
+2. Ejecutar el entorno gráfico de Cypress
+```bash
+npx cypress open
+```
+
+## 🧪 Tests implementados
+
+### 1. Admin flow
+✅ Does not allow access to /admin/users as a user role
+✅ Allows access to /admin/users as admin role
+
+### 2. Proceso de compra completo con autenticación
+✅ Agrega al carrito y completa la compra
+
+### 3. Compra sin autenticación
+✅ Debe redirigir al login si intenta comprar sin estar autenticado
+
+### 4. Comprobación de subtotal, IVA y total
+✅ calcula correctamente el subtotal, IVA y total
+
+### 5. Login and Logout
+✅ The user can log in with valid credentials  
+✅ Displays error with invalid credentials  
+✅ Allows you to log out
+
+### 6. Access to protected routes
+✅ Does not allow access to /profile without login  
+✅ Allows access to /profile after login
+
+### 7. User registration
+✅ Allows you to register a new user  
+✅ It does not allow you to register an existing email address.
