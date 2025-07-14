@@ -65,7 +65,7 @@ php artisan db:seed
 php artisan storage:link
 ```
 
-### 6. Levanta el servidor de desarrollo
+### 6. Levanta el servidor de desarrollo (http://127.0.0.1:8000)
 
 ```bash
 php artisan serve
